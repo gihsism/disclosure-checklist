@@ -73,8 +73,18 @@ export default function AnalysisResults({
   result,
   onUpdateItem,
 }: AnalysisResultsProps) {
+  // Start with all standards expanded
+  const allStandardKeys = Object.keys(
+    result.checklist.reduce(
+      (acc, item) => {
+        acc[item.standard] = true;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    )
+  );
   const [expandedStandards, setExpandedStandards] = useState<Set<string>>(
-    new Set()
+    new Set(allStandardKeys)
   );
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -222,7 +232,18 @@ export default function AnalysisResults({
           ).map((f) => (
             <button
               key={f}
-              onClick={() => setStatusFilter(f)}
+              onClick={() => {
+                setStatusFilter(f);
+                // Auto-expand all standards that have matching items
+                if (f === "all") {
+                  setExpandedStandards(new Set(Object.keys(grouped)));
+                } else {
+                  const matching = Object.entries(grouped)
+                    .filter(([, items]) => items.some((i) => i.status === f))
+                    .map(([std]) => std);
+                  setExpandedStandards(new Set(matching));
+                }
+              }}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                 statusFilter === f
                   ? "bg-blue-100 text-blue-700"
