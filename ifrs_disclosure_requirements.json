@@ -1,0 +1,2108 @@
+{
+  "metadata": {
+    "title": "IFRS Disclosure Checklist Requirements",
+    "version": "2024-2025",
+    "sources": [
+      "IASB Official Standards (as amended through 2024)",
+      "Deloitte IFRS Disclosure Checklist 2024",
+      "PwC IFRS Manual of Accounting / Disclosure Checklist",
+      "EY International GAAP Disclosure Checklist",
+      "KPMG IFRS Disclosure Checklist"
+    ],
+    "last_updated": "2025-01-01",
+    "notes": "Covers key disclosure requirements per standard. Paragraph references are to the relevant IFRS/IAS standard. Each requirement has a unique ID in the format STANDARD-SEQ."
+  },
+  "standards": [
+    {
+      "standard_number": "IAS 1",
+      "standard_name": "Presentation of Financial Statements",
+      "effective_date": "2009-01-01",
+      "last_amended": "2024",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS1-001",
+          "description": "Disclose an explicit and unreserved statement of compliance with IFRSs",
+          "reference_paragraph": "IAS 1.16",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-002",
+          "description": "Present a complete set of financial statements: statement of financial position, statement of profit or loss and OCI, statement of changes in equity, statement of cash flows, and notes",
+          "reference_paragraph": "IAS 1.10",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-003",
+          "description": "Disclose the reporting entity name, whether financial statements are for individual entity or group, domicile, legal form, country of incorporation, and registered office address",
+          "reference_paragraph": "IAS 1.138(a)-(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-004",
+          "description": "Describe the nature of the entity's operations and principal activities",
+          "reference_paragraph": "IAS 1.138(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-005",
+          "description": "Disclose the name of the parent and the ultimate parent of the group",
+          "reference_paragraph": "IAS 1.138(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-006",
+          "description": "Present current and non-current assets and liabilities as separate classifications on the face of the statement of financial position (or in order of liquidity if more reliable)",
+          "reference_paragraph": "IAS 1.60",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-007",
+          "description": "Disclose the date the financial statements were authorised for issue and who gave that authorisation",
+          "reference_paragraph": "IAS 1.138(a) / IAS 10.17",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-008",
+          "description": "Disclose judgements made in applying accounting policies that have the most significant effect on amounts recognised",
+          "reference_paragraph": "IAS 1.122",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-009",
+          "description": "Disclose key assumptions concerning the future and other major sources of estimation uncertainty that have a significant risk of causing a material adjustment within the next financial year",
+          "reference_paragraph": "IAS 1.125",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-010",
+          "description": "For each key estimation uncertainty, disclose the nature and the carrying amount of the related asset/liability at the end of the reporting period",
+          "reference_paragraph": "IAS 1.125",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-011",
+          "description": "Present comparative information for the preceding period for all amounts reported in the current period financial statements",
+          "reference_paragraph": "IAS 1.38",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-012",
+          "description": "Present a third statement of financial position (as at the beginning of the preceding period) when an entity applies an accounting policy retrospectively, makes a retrospective restatement, or reclassifies items",
+          "reference_paragraph": "IAS 1.40A",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-013",
+          "description": "Disclose separately material items of income and expense (e.g., write-downs of inventories, restructuring provisions, disposals of PPE, litigation settlements, reversals of provisions)",
+          "reference_paragraph": "IAS 1.97-98",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-014",
+          "description": "Present each component of other comprehensive income classified by nature and grouped into items that will and will not be subsequently reclassified to profit or loss",
+          "reference_paragraph": "IAS 1.82A",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-015",
+          "description": "Disclose reclassification adjustments for components of other comprehensive income",
+          "reference_paragraph": "IAS 1.92",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-016",
+          "description": "Disclose the amount of dividends recognised as distributions to owners during the period and the related amount per share",
+          "reference_paragraph": "IAS 1.107",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-017",
+          "description": "Disclose summary of significant accounting policies including the measurement bases used and other accounting policies relevant to understanding the financial statements",
+          "reference_paragraph": "IAS 1.117",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-018",
+          "description": "Disclose material accounting policy information rather than significant accounting policies (amended requirement focusing on materiality of policy disclosures)",
+          "reference_paragraph": "IAS 1.117 (amended 2021)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-019",
+          "description": "Disclose information about capital management: objectives, policies and processes; quantitative data about what the entity manages as capital; changes from the prior period; and whether the entity has complied with any externally imposed capital requirements",
+          "reference_paragraph": "IAS 1.134-136",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS1-020",
+          "description": "Disclose the reporting period covered and any reasons for using a longer or shorter period",
+          "reference_paragraph": "IAS 1.36",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS1-021",
+          "description": "When going concern assessment involves material uncertainties, disclose the uncertainties and whether the financial statements are prepared on a going concern basis",
+          "reference_paragraph": "IAS 1.25-26",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 2",
+      "standard_name": "Inventories",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "Assets",
+      "requirements": [
+        {
+          "id": "IAS2-001",
+          "description": "Disclose the accounting policies adopted for measuring inventories, including the cost formula used (FIFO, weighted average)",
+          "reference_paragraph": "IAS 2.36(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS2-002",
+          "description": "Disclose the total carrying amount of inventories and the carrying amount in classifications appropriate to the entity (e.g., merchandise, supplies, materials, work in progress, finished goods)",
+          "reference_paragraph": "IAS 2.36(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS2-003",
+          "description": "Disclose the carrying amount of inventories carried at fair value less costs to sell",
+          "reference_paragraph": "IAS 2.36(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS2-004",
+          "description": "Disclose the amount of inventories recognised as an expense during the period (cost of sales)",
+          "reference_paragraph": "IAS 2.36(d)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS2-005",
+          "description": "Disclose the amount of any write-down of inventories recognised as an expense in the period",
+          "reference_paragraph": "IAS 2.36(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS2-006",
+          "description": "Disclose the amount of any reversal of any write-down that is recognised as a reduction of inventories expense in the period",
+          "reference_paragraph": "IAS 2.36(f)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS2-007",
+          "description": "Disclose the circumstances or events that led to the reversal of a write-down of inventories",
+          "reference_paragraph": "IAS 2.36(g)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS2-008",
+          "description": "Disclose the carrying amount of inventories pledged as security for liabilities",
+          "reference_paragraph": "IAS 2.36(h)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 7",
+      "standard_name": "Statement of Cash Flows",
+      "effective_date": "1994-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS7-001",
+          "description": "Present cash flows during the period classified by operating, investing, and financing activities",
+          "reference_paragraph": "IAS 7.10",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS7-002",
+          "description": "Report cash flows from operating activities using either the direct method (encouraged) or indirect method",
+          "reference_paragraph": "IAS 7.18",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS7-003",
+          "description": "Disclose components of cash and cash equivalents and present a reconciliation of the amounts in the cash flow statement with equivalent items in the statement of financial position",
+          "reference_paragraph": "IAS 7.45",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS7-004",
+          "description": "Disclose the policy adopted in determining the composition of cash and cash equivalents",
+          "reference_paragraph": "IAS 7.46",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS7-005",
+          "description": "Disclose separately cash flows from interest paid and received, and dividends paid and received, classifying each consistently",
+          "reference_paragraph": "IAS 7.31-34",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS7-006",
+          "description": "Disclose income taxes paid separately and classify as operating unless specifically identified with financing or investing activities",
+          "reference_paragraph": "IAS 7.35-36",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS7-007",
+          "description": "Report cash flows from investing and financing activities on a gross basis (except where net reporting is permitted)",
+          "reference_paragraph": "IAS 7.21-22",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS7-008",
+          "description": "Disclose the aggregate amount of cash flows from obtaining or losing control of subsidiaries or other businesses, classified as investing activities",
+          "reference_paragraph": "IAS 7.39",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS7-009",
+          "description": "Disclose for acquisitions/disposals of subsidiaries: total consideration, portion paid/received in cash, amount of cash acquired/disposed, and amounts of other assets and liabilities acquired/disposed",
+          "reference_paragraph": "IAS 7.40",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS7-010",
+          "description": "Disclose investing and financing transactions that do not require the use of cash (non-cash transactions) in a way that provides all relevant information about these activities",
+          "reference_paragraph": "IAS 7.43",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS7-011",
+          "description": "Disclose changes in liabilities arising from financing activities, including both changes arising from cash flows and non-cash changes (reconciliation)",
+          "reference_paragraph": "IAS 7.44A-44E",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS7-012",
+          "description": "Disclose the amount of significant cash and cash equivalent balances held by the entity that are not available for use by the group, together with a commentary by management",
+          "reference_paragraph": "IAS 7.48",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 8",
+      "standard_name": "Accounting Policies, Changes in Accounting Estimates and Errors",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS8-001",
+          "description": "When an initial application of an IFRS has an effect on the current or any prior period, disclose: title of the IFRS, nature of the change, description of transitional provisions, and amounts adjusted for the current and each prior period",
+          "reference_paragraph": "IAS 8.28",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS8-002",
+          "description": "When a voluntary change in accounting policy has an effect, disclose: nature of the change, reasons why the new policy provides reliable and more relevant information, amount of adjustment for each line item and EPS (current and each prior period)",
+          "reference_paragraph": "IAS 8.29",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS8-003",
+          "description": "When a new IFRS has been issued but is not yet effective, disclose the fact and known or reasonably estimable information relevant to assessing the possible impact of initial application",
+          "reference_paragraph": "IAS 8.30",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS8-004",
+          "description": "Disclose the nature and amount of a change in an accounting estimate that has an effect in the current period or is expected to have an effect in future periods",
+          "reference_paragraph": "IAS 8.39-40",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS8-005",
+          "description": "For correction of prior period errors, disclose: the nature of the error, the amount of the correction for each prior period, the adjustment to EPS (basic and diluted), and the amount of the correction at the beginning of the earliest prior period",
+          "reference_paragraph": "IAS 8.49",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS8-006",
+          "description": "If retrospective application or retrospective restatement is impracticable, disclose the circumstances and a description of how and from when the change/correction has been applied",
+          "reference_paragraph": "IAS 8.28(h)/49(e)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 10",
+      "standard_name": "Events After the Reporting Period",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS10-001",
+          "description": "Disclose the date when the financial statements were authorised for issue and who gave that authorisation",
+          "reference_paragraph": "IAS 10.17",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS10-002",
+          "description": "If the entity's owners or others have the power to amend the financial statements after issue, disclose that fact",
+          "reference_paragraph": "IAS 10.17",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS10-003",
+          "description": "Update disclosures about conditions that existed at the end of the reporting period in light of any adjusting events after the reporting period",
+          "reference_paragraph": "IAS 10.19",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS10-004",
+          "description": "For each material category of non-adjusting events after the reporting period, disclose the nature of the event and an estimate of its financial effect, or a statement that such an estimate cannot be made",
+          "reference_paragraph": "IAS 10.21",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS10-005",
+          "description": "If the going concern basis is no longer appropriate after the reporting period, do not prepare financial statements on a going concern basis and disclose this fact",
+          "reference_paragraph": "IAS 10.14-16",
+          "commonly_missed": false
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 12",
+      "standard_name": "Income Taxes",
+      "effective_date": "1998-01-01",
+      "last_amended": "2024",
+      "category": "Taxes",
+      "requirements": [
+        {
+          "id": "IAS12-001",
+          "description": "Disclose the major components of tax expense (income), separately disclosing current tax expense, adjustments for prior periods, deferred tax relating to origination and reversal of temporary differences, etc.",
+          "reference_paragraph": "IAS 12.79",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS12-002",
+          "description": "Disclose the aggregate current and deferred tax relating to items that are charged or credited directly to equity",
+          "reference_paragraph": "IAS 12.81(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-003",
+          "description": "Disclose the amount of income tax relating to each component of other comprehensive income",
+          "reference_paragraph": "IAS 12.81(ab)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-004",
+          "description": "Disclose a numerical reconciliation between tax expense (income) and the product of accounting profit multiplied by the applicable tax rate(s), disclosing the basis of the applicable tax rate(s)",
+          "reference_paragraph": "IAS 12.81(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS12-005",
+          "description": "Disclose an explanation of changes in the applicable tax rate(s) compared with the previous accounting period",
+          "reference_paragraph": "IAS 12.81(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-006",
+          "description": "Disclose the amount and expiry date (if any) of deductible temporary differences, unused tax losses, and unused tax credits for which no deferred tax asset is recognised",
+          "reference_paragraph": "IAS 12.81(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-007",
+          "description": "Disclose the aggregate amount of temporary differences associated with investments in subsidiaries, associates, branches, and joint arrangements for which deferred tax liabilities have not been recognised",
+          "reference_paragraph": "IAS 12.81(f)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-008",
+          "description": "Disclose for each type of temporary difference and for unused tax losses and tax credits: the amount of deferred tax assets and liabilities recognised in the statement of financial position, and the amount of deferred tax income or expense recognised in profit or loss (if not apparent from changes in amounts in the statement of financial position)",
+          "reference_paragraph": "IAS 12.81(g)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS12-009",
+          "description": "Disclose the amount of deferred tax asset and the nature of evidence supporting its recognition when utilisation is dependent on future taxable profits in excess of profits from reversal of existing taxable temporary differences and the entity has suffered a loss in the current or preceding period in the relevant tax jurisdiction",
+          "reference_paragraph": "IAS 12.82",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-010",
+          "description": "Disclose tax consequences of dividends proposed or declared before the financial statements were authorised for issue but not recognised as a liability",
+          "reference_paragraph": "IAS 12.81(i)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS12-011",
+          "description": "For the Pillar Two / Global Minimum Tax (GloBE), disclose that the entity has applied the exception from recognising deferred tax on Pillar Two top-up tax, and disclose known or reasonably estimable information about the entity's exposure to Pillar Two income taxes",
+          "reference_paragraph": "IAS 12.4A, 88A-88C",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 16",
+      "standard_name": "Property, Plant and Equipment",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "Assets",
+      "requirements": [
+        {
+          "id": "IAS16-001",
+          "description": "Disclose for each class of PPE: the measurement bases used for determining the gross carrying amount, the depreciation methods used, the useful lives or depreciation rates used",
+          "reference_paragraph": "IAS 16.73(a)-(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS16-002",
+          "description": "Disclose for each class of PPE: gross carrying amount and accumulated depreciation (aggregated with accumulated impairment losses) at the beginning and end of the period",
+          "reference_paragraph": "IAS 16.73(d)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS16-003",
+          "description": "Disclose a reconciliation of the carrying amount at the beginning and end of the period showing: additions, disposals, acquisitions through business combinations, increases/decreases from revaluations, impairment losses, reversals, depreciation, exchange differences, and other changes",
+          "reference_paragraph": "IAS 16.73(e)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS16-004",
+          "description": "Disclose the existence and amounts of restrictions on title and PPE pledged as security for liabilities",
+          "reference_paragraph": "IAS 16.74(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS16-005",
+          "description": "Disclose the amount of expenditures recognised in the carrying amount of an item of PPE in the course of its construction",
+          "reference_paragraph": "IAS 16.74(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS16-006",
+          "description": "Disclose the amount of contractual commitments for the acquisition of PPE",
+          "reference_paragraph": "IAS 16.74(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS16-007",
+          "description": "Disclose the amount of compensation from third parties for items of PPE that were impaired, lost, or given up, included in profit or loss",
+          "reference_paragraph": "IAS 16.74(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS16-008",
+          "description": "If PPE is stated at revalued amounts, disclose: the effective date of the revaluation, whether an independent valuer was involved, the methods and significant assumptions used, the extent to which fair values were measured by reference to observable prices, and the revaluation surplus (including changes and restrictions on distribution to shareholders)",
+          "reference_paragraph": "IAS 16.77",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS16-009",
+          "description": "If PPE is stated at revalued amounts, disclose the carrying amount that would have been recognised had assets been carried under the cost model",
+          "reference_paragraph": "IAS 16.77(e)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 19",
+      "standard_name": "Employee Benefits",
+      "effective_date": "2013-01-01",
+      "last_amended": "2023",
+      "category": "Liabilities",
+      "requirements": [
+        {
+          "id": "IAS19-001",
+          "description": "Disclose the characteristics of defined benefit plans and risks associated with them",
+          "reference_paragraph": "IAS 19.139(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS19-002",
+          "description": "Disclose amounts in the financial statements: net defined benefit liability/asset, present value of defined benefit obligation, and fair value of plan assets",
+          "reference_paragraph": "IAS 19.140",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS19-003",
+          "description": "Provide a reconciliation of the opening and closing balances of the net defined benefit liability (asset), showing separately service cost, net interest, remeasurements, contributions, and benefits paid",
+          "reference_paragraph": "IAS 19.141",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS19-004",
+          "description": "Disaggregate the fair value of plan assets into classes that distinguish the nature and risks, further subdividing each class between those that have a quoted market price in an active market and those that do not",
+          "reference_paragraph": "IAS 19.142",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS19-005",
+          "description": "Disclose significant actuarial assumptions used: discount rate, expected rates of salary increase, medical cost trend rates, and any other material assumptions",
+          "reference_paragraph": "IAS 19.144",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS19-006",
+          "description": "Disclose a sensitivity analysis for each significant actuarial assumption, showing how the defined benefit obligation would have been affected by reasonably possible changes",
+          "reference_paragraph": "IAS 19.145(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS19-007",
+          "description": "Disclose methods and assumptions used in preparing sensitivity analyses and any changes from the prior period",
+          "reference_paragraph": "IAS 19.145(b)-(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS19-008",
+          "description": "Disclose a description of any asset-liability matching strategies used by the plan or the entity",
+          "reference_paragraph": "IAS 19.146",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS19-009",
+          "description": "Disclose the expected contributions to the plan for the next annual reporting period",
+          "reference_paragraph": "IAS 19.147(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS19-010",
+          "description": "Disclose a maturity profile of the defined benefit obligation, including weighted average duration",
+          "reference_paragraph": "IAS 19.147(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS19-011",
+          "description": "Disclose the amount recognised as expense for defined contribution plans",
+          "reference_paragraph": "IAS 19.53",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS19-012",
+          "description": "Disclose amounts for termination benefits: the expense recognised and the amount of the obligation at the end of the period",
+          "reference_paragraph": "IAS 19.171",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 21",
+      "standard_name": "The Effects of Changes in Foreign Exchange Rates",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS21-001",
+          "description": "Disclose the amount of exchange differences recognised in profit or loss (except for financial instruments measured at fair value through profit or loss under IFRS 9)",
+          "reference_paragraph": "IAS 21.52(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS21-002",
+          "description": "Disclose net exchange differences recognised in other comprehensive income and accumulated in a separate component of equity, and a reconciliation of the amount at the beginning and end of the period",
+          "reference_paragraph": "IAS 21.52(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS21-003",
+          "description": "When the presentation currency is different from the functional currency, disclose that fact together with the functional currency and the reason for using a different presentation currency",
+          "reference_paragraph": "IAS 21.53",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS21-004",
+          "description": "Disclose when there is a change in the functional currency of the reporting entity or a significant foreign operation and the reason for the change",
+          "reference_paragraph": "IAS 21.54",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS21-005",
+          "description": "When financial statements are presented in a currency that is different from the functional currency, state that the financial statements comply with IFRS only if they comply with all requirements of each applicable IFRS, including the translation method",
+          "reference_paragraph": "IAS 21.55",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 23",
+      "standard_name": "Borrowing Costs",
+      "effective_date": "2009-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS23-001",
+          "description": "Disclose the amount of borrowing costs capitalised during the period",
+          "reference_paragraph": "IAS 23.26(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS23-002",
+          "description": "Disclose the capitalisation rate used to determine the amount of borrowing costs eligible for capitalisation",
+          "reference_paragraph": "IAS 23.26(b)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 24",
+      "standard_name": "Related Party Disclosures",
+      "effective_date": "2011-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS24-001",
+          "description": "Disclose relationships between a parent and its subsidiaries regardless of whether there have been transactions between them, including the name of the parent and, if different, the ultimate controlling party",
+          "reference_paragraph": "IAS 24.13",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS24-002",
+          "description": "Disclose key management personnel compensation in total and for each of the following categories: short-term employee benefits, post-employment benefits, other long-term benefits, termination benefits, and share-based payment",
+          "reference_paragraph": "IAS 24.17",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS24-003",
+          "description": "If there have been related party transactions, disclose the nature of the related party relationship and information about the transactions and outstanding balances (including commitments) necessary to understand the potential effect on the financial statements",
+          "reference_paragraph": "IAS 24.18",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS24-004",
+          "description": "As a minimum, disclose: the amount of the transactions, the amount of outstanding balances (including terms and conditions, whether secured, and the nature of consideration to be provided in settlement), details of any guarantees given or received, provisions for doubtful debts related to outstanding balances, and the expense recognised for bad or doubtful debts of related parties",
+          "reference_paragraph": "IAS 24.18(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS24-005",
+          "description": "Disclose separately transactions with: the parent, entities with joint control or significant influence over the entity, subsidiaries, associates, joint ventures, key management personnel, and other related parties",
+          "reference_paragraph": "IAS 24.19",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS24-006",
+          "description": "Do not state that related party transactions were made on terms equivalent to those that prevail in arm's length transactions unless such terms can be substantiated",
+          "reference_paragraph": "IAS 24.23",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS24-007",
+          "description": "A government-related entity is exempted from full disclosure for transactions with the government and other government-related entities but must disclose the name of the government, nature of the relationship, and information sufficient to enable users to understand the effect of related party transactions",
+          "reference_paragraph": "IAS 24.25-27",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 27",
+      "standard_name": "Separate Financial Statements",
+      "effective_date": "2013-01-01",
+      "last_amended": "2023",
+      "category": "Consolidation",
+      "requirements": [
+        {
+          "id": "IAS27-001",
+          "description": "Disclose a list of significant investments in subsidiaries, joint ventures, and associates, including the name, principal place of business (and country of incorporation if different), and the proportion of ownership interest (and proportion of voting rights if different)",
+          "reference_paragraph": "IAS 27.16(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS27-002",
+          "description": "Disclose the method used to account for investments in subsidiaries, jointly controlled entities, and associates (cost, IFRS 9, or equity method)",
+          "reference_paragraph": "IAS 27.16(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS27-003",
+          "description": "When a parent (other than a parent covered by IAS 27.16A) elects not to prepare consolidated financial statements and instead prepares separate financial statements, disclose the name and principal place of business of the entity that produces consolidated financial statements and where they are available",
+          "reference_paragraph": "IAS 27.16(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS27-004",
+          "description": "Disclose the nature and extent of any significant restrictions on the ability of subsidiaries to transfer funds to the parent in the form of cash dividends or to repay loans or advances",
+          "reference_paragraph": "IAS 27.16(c)(referenced via IFRS 12)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 28",
+      "standard_name": "Investments in Associates and Joint Ventures",
+      "effective_date": "2013-01-01",
+      "last_amended": "2023",
+      "category": "Consolidation",
+      "requirements": [
+        {
+          "id": "IAS28-001",
+          "description": "Disclose the nature and extent of significant restrictions on the ability of associates or joint ventures to transfer funds to the investor in the form of cash dividends or repayment of loans or advances",
+          "reference_paragraph": "IAS 28.Note/IFRS 12.22(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS28-002",
+          "description": "Disclose the fair value of the investment in an associate or joint venture for which there are published price quotations",
+          "reference_paragraph": "IAS 28.Note/IFRS 12.21(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS28-003",
+          "description": "When the reporting dates of the associate or joint venture differ from those of the entity, disclose that fact and the date of the financial statements used",
+          "reference_paragraph": "IAS 28.33-34",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS28-004",
+          "description": "Disclose unrecognised share of losses of an associate/joint venture both for the period and cumulatively, if the entity has stopped recognising its share of losses",
+          "reference_paragraph": "IAS 28.38/IFRS 12.22(c)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 32",
+      "standard_name": "Financial Instruments: Presentation",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "Financial Instruments",
+      "requirements": [
+        {
+          "id": "IAS32-001",
+          "description": "When an entity has a financial instrument that contains both a liability and an equity component, disclose the terms and conditions that relate to classification",
+          "reference_paragraph": "IAS 32.28-29",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS32-002",
+          "description": "Disclose the basis for offsetting financial assets and financial liabilities, and the terms and conditions of master netting arrangements or similar agreements",
+          "reference_paragraph": "IAS 32.AG38-39 / IFRS 7.13A-13F",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS32-003",
+          "description": "Disclose when a financial instrument that is classified as equity was reclassified from a liability or vice versa",
+          "reference_paragraph": "IAS 32.18",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS32-004",
+          "description": "Disclose the nature and purpose of each reserve within equity",
+          "reference_paragraph": "IAS 1.79(b) (referenced via IAS 32)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS32-005",
+          "description": "Disclose for puttable instruments classified as equity: summary quantitative data, the entity's objectives and policies for managing its obligation, expected cash outflow on redemption, and how the expected cash outflow was determined",
+          "reference_paragraph": "IAS 32.16A-16D / IAS 1.136A",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 33",
+      "standard_name": "Earnings Per Share",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS33-001",
+          "description": "Present on the face of the statement of comprehensive income basic and diluted EPS for profit or loss from continuing operations attributable to ordinary equity holders and for total profit or loss attributable to ordinary equity holders",
+          "reference_paragraph": "IAS 33.66",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS33-002",
+          "description": "Present basic and diluted EPS with equal prominence for all periods presented",
+          "reference_paragraph": "IAS 33.66",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS33-003",
+          "description": "Disclose the amounts used as the numerators in calculating basic and diluted EPS, and a reconciliation of those amounts to profit or loss attributable to the parent entity",
+          "reference_paragraph": "IAS 33.70(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS33-004",
+          "description": "Disclose the weighted average number of ordinary shares used as the denominator in calculating basic and diluted EPS, and a reconciliation of the denominators to each other",
+          "reference_paragraph": "IAS 33.70(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS33-005",
+          "description": "Disclose instruments (including contingently issuable shares) that could potentially dilute basic EPS in the future but were not included in the calculation of diluted EPS because they are antidilutive for the period(s) presented",
+          "reference_paragraph": "IAS 33.70(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS33-006",
+          "description": "Disclose a description of ordinary share transactions or potential ordinary share transactions that occur after the reporting period that would have significantly changed the EPS",
+          "reference_paragraph": "IAS 33.70(d)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 34",
+      "standard_name": "Interim Financial Reporting",
+      "effective_date": "1999-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IAS34-001",
+          "description": "Include as a minimum: a condensed statement of financial position, condensed statement of profit or loss and OCI, condensed statement of changes in equity, condensed statement of cash flows, and selected explanatory notes",
+          "reference_paragraph": "IAS 34.8",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS34-002",
+          "description": "Disclose events and transactions that are significant to an understanding of changes since the last annual reporting period (e.g., write-downs, business combinations, restructuring, changes in contingent liabilities or assets)",
+          "reference_paragraph": "IAS 34.15-15B",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS34-003",
+          "description": "Disclose the nature and amount of items affecting assets, liabilities, equity, net income, or cash flows that are unusual because of their nature, size, or incidence",
+          "reference_paragraph": "IAS 34.15C",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS34-004",
+          "description": "Include a statement that the same accounting policies and methods of computation are followed in the interim financial statements as in the most recent annual financial statements or, if those policies or methods have been changed, a description of the nature and effect of the change",
+          "reference_paragraph": "IAS 34.16A(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS34-005",
+          "description": "Disclose disaggregated revenue from contracts with customers as required by IFRS 15",
+          "reference_paragraph": "IAS 34.16A(l)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS34-006",
+          "description": "Present comparative statements: statement of financial position as at end of the immediately preceding financial year; statements of profit or loss and OCI for the comparable interim period and for the year-to-date; statement of changes in equity and cash flows for the comparable year-to-date period",
+          "reference_paragraph": "IAS 34.20",
+          "commonly_missed": false
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 36",
+      "standard_name": "Impairment of Assets",
+      "effective_date": "2004-03-31",
+      "last_amended": "2023",
+      "category": "Assets",
+      "requirements": [
+        {
+          "id": "IAS36-001",
+          "description": "For each class of assets, disclose the amount of impairment losses recognised in profit or loss and the line item(s) in which those impairment losses are included",
+          "reference_paragraph": "IAS 36.126(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS36-002",
+          "description": "For each class of assets, disclose the amount of reversals of impairment losses recognised in profit or loss and the line item(s) in which those reversals are included",
+          "reference_paragraph": "IAS 36.126(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS36-003",
+          "description": "Disclose for each material impairment loss recognised or reversed: the events and circumstances that led to the recognition or reversal, the amount of the loss or reversal, the nature of the asset (or CGU including a description and the segment to which it belongs)",
+          "reference_paragraph": "IAS 36.130",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS36-004",
+          "description": "For each material impairment, disclose whether the recoverable amount is fair value less costs of disposal or value in use, the discount rate used (for value in use), or the valuation technique used (for fair value less costs of disposal)",
+          "reference_paragraph": "IAS 36.130(d)-(f)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS36-005",
+          "description": "Disclose for each cash-generating unit (group of units) for which the carrying amount of goodwill or intangible assets with indefinite useful lives allocated is significant: the carrying amount of goodwill, the carrying amount of intangible assets with indefinite useful lives",
+          "reference_paragraph": "IAS 36.134",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS36-006",
+          "description": "For each CGU with significant goodwill or indefinite-life intangibles, disclose the basis on which the unit's recoverable amount has been determined (value in use or fair value less costs of disposal)",
+          "reference_paragraph": "IAS 36.134(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS36-007",
+          "description": "If recoverable amount is based on value in use, disclose: the key assumptions used, management's approach to determining the values assigned, the period over which cash flows are projected, the growth rate used to extrapolate beyond the projection period, and the discount rate(s) applied",
+          "reference_paragraph": "IAS 36.134(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS36-008",
+          "description": "If recoverable amount is based on fair value less costs of disposal, disclose: the valuation technique(s) used, key assumptions, and the level of the fair value hierarchy",
+          "reference_paragraph": "IAS 36.134(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS36-009",
+          "description": "Disclose a sensitivity analysis: if a reasonably possible change in a key assumption would cause the carrying amount to exceed the recoverable amount, disclose the amount by which the recoverable amount exceeds the carrying amount, the value assigned to the key assumption, and the amount by which the key assumption must change for recoverable amount to equal carrying amount",
+          "reference_paragraph": "IAS 36.134(f)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 37",
+      "standard_name": "Provisions, Contingent Liabilities and Contingent Assets",
+      "effective_date": "1999-07-01",
+      "last_amended": "2023",
+      "category": "Liabilities",
+      "requirements": [
+        {
+          "id": "IAS37-001",
+          "description": "For each class of provision, disclose: carrying amount at beginning and end of the period, additional provisions made (including increases to existing provisions), amounts used (incurred and charged against the provision), unused amounts reversed, and the increase during the period from discounting/changes in discount rate",
+          "reference_paragraph": "IAS 37.84",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS37-002",
+          "description": "For each class of provision, disclose: a brief description of the nature of the obligation and the expected timing of outflows of economic benefits",
+          "reference_paragraph": "IAS 37.85(a)-(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS37-003",
+          "description": "For each class of provision, disclose: an indication of the uncertainties about the amount or timing of those outflows",
+          "reference_paragraph": "IAS 37.85(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS37-004",
+          "description": "For each class of provision, disclose: the amount of any expected reimbursement, stating the amount of any asset that has been recognised for that expected reimbursement",
+          "reference_paragraph": "IAS 37.85(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS37-005",
+          "description": "For each class of contingent liability (unless the possibility of outflow is remote), disclose: a brief description of its nature, an estimate of its financial effect, an indication of uncertainties, and the possibility of any reimbursement",
+          "reference_paragraph": "IAS 37.86",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS37-006",
+          "description": "If a provision or contingent liability arises from the same set of circumstances, disclose in a way that shows the link between the provision and the contingent liability",
+          "reference_paragraph": "IAS 37.87",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS37-007",
+          "description": "Where an inflow of economic benefits is probable, disclose a brief description of the nature of the contingent assets and, where practicable, an estimate of their financial effect",
+          "reference_paragraph": "IAS 37.89",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS37-008",
+          "description": "If information required by IAS 37.86 and 37.89 is not disclosed because it is not practicable, that fact shall be stated",
+          "reference_paragraph": "IAS 37.91",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 38",
+      "standard_name": "Intangible Assets",
+      "effective_date": "2004-03-31",
+      "last_amended": "2023",
+      "category": "Assets",
+      "requirements": [
+        {
+          "id": "IAS38-001",
+          "description": "For each class of intangible assets, distinguishing between internally generated and other intangible assets, disclose: whether useful lives are finite or indefinite; if finite, the useful lives or amortisation rates used; the amortisation methods used",
+          "reference_paragraph": "IAS 38.118(a)-(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS38-002",
+          "description": "For each class of intangible assets, disclose: gross carrying amount and accumulated amortisation (aggregated with accumulated impairment losses) at beginning and end of period",
+          "reference_paragraph": "IAS 38.118(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS38-003",
+          "description": "Disclose a reconciliation of the carrying amount at the beginning and end of the period showing: additions (separately identifying internal development, acquisitions, and business combinations), retirements and disposals, impairment losses, reversals, amortisation, exchange differences, and other changes",
+          "reference_paragraph": "IAS 38.118(e)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS38-004",
+          "description": "For intangible assets with indefinite useful lives, disclose the carrying amount and the reasons supporting the indefinite useful life assessment, describing the factor(s) that played a significant role",
+          "reference_paragraph": "IAS 38.122(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS38-005",
+          "description": "Disclose a description, the carrying amount, and remaining amortisation period of any individual intangible asset that is material to the entity's financial statements",
+          "reference_paragraph": "IAS 38.122(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS38-006",
+          "description": "Disclose the existence and carrying amounts of intangible assets whose title is restricted and the carrying amounts of intangible assets pledged as security for liabilities",
+          "reference_paragraph": "IAS 38.122(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS38-007",
+          "description": "Disclose the amount of contractual commitments for the acquisition of intangible assets",
+          "reference_paragraph": "IAS 38.122(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS38-008",
+          "description": "Disclose the aggregate amount of research and development expenditure recognised as an expense during the period",
+          "reference_paragraph": "IAS 38.126",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS38-009",
+          "description": "For intangible assets measured using the revaluation model, disclose: effective date of revaluation, carrying amount of revalued assets, carrying amount under cost model, and revaluation surplus (including movement and restrictions on distribution)",
+          "reference_paragraph": "IAS 38.124",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IAS 40",
+      "standard_name": "Investment Property",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "Assets",
+      "requirements": [
+        {
+          "id": "IAS40-001",
+          "description": "Disclose whether the entity applies the fair value model or the cost model",
+          "reference_paragraph": "IAS 40.75(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS40-002",
+          "description": "Disclose the criteria used to distinguish investment property from owner-occupied property and from property held for sale in the ordinary course of business, when classification is difficult",
+          "reference_paragraph": "IAS 40.75(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS40-003",
+          "description": "Disclose the methods and significant assumptions applied in determining the fair value of investment property, including whether the determination was supported by market evidence or based on other factors (which the entity shall disclose)",
+          "reference_paragraph": "IAS 40.75(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS40-004",
+          "description": "Disclose the extent to which the fair value of investment property is based on a valuation by an independent valuer who holds a recognised and relevant professional qualification and has recent experience in the location and category of the investment property. If there has been no such valuation, that fact shall be disclosed",
+          "reference_paragraph": "IAS 40.75(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS40-005",
+          "description": "Disclose the amounts recognised in profit or loss for: rental income, direct operating expenses (generating rental income), and direct operating expenses (not generating rental income)",
+          "reference_paragraph": "IAS 40.75(f)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS40-006",
+          "description": "Disclose the existence and amounts of restrictions on the realisability of investment property or the remittance of income and proceeds of disposal",
+          "reference_paragraph": "IAS 40.75(g)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS40-007",
+          "description": "Disclose contractual obligations to purchase, construct, develop, or for repairs, maintenance, or enhancements of investment property",
+          "reference_paragraph": "IAS 40.75(h)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IAS40-008",
+          "description": "If using the fair value model, disclose a reconciliation of the carrying amount at the beginning and end of the period, showing: additions, disposals, net gains or losses from fair value adjustments, transfers to/from inventories and owner-occupied property, and exchange differences",
+          "reference_paragraph": "IAS 40.76",
+          "commonly_missed": false
+        },
+        {
+          "id": "IAS40-009",
+          "description": "If using the cost model, disclose: the depreciation methods, useful lives or rates, gross carrying amount and accumulated depreciation, a reconciliation of the carrying amount, and the fair value of investment property (or a statement that fair value cannot be determined reliably and why)",
+          "reference_paragraph": "IAS 40.79",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 2",
+      "standard_name": "Share-based Payment",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "Equity",
+      "requirements": [
+        {
+          "id": "IFRS2-001",
+          "description": "Disclose the nature and extent of share-based payment arrangements that existed during the period, including a general description of each type of arrangement (including vesting conditions, maximum term, and method of settlement)",
+          "reference_paragraph": "IFRS 2.44-45",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS2-002",
+          "description": "Disclose the number and weighted average exercise prices of share options: outstanding at the beginning of the period, granted, forfeited, exercised, expired, outstanding at end of period, and exercisable at end of period",
+          "reference_paragraph": "IFRS 2.45(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS2-003",
+          "description": "For share options exercised during the period, disclose the weighted average share price at the date of exercise",
+          "reference_paragraph": "IFRS 2.45(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS2-004",
+          "description": "For share options outstanding at end of the period, disclose the range of exercise prices and weighted average remaining contractual life",
+          "reference_paragraph": "IFRS 2.45(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS2-005",
+          "description": "Disclose how the fair value of goods or services received, or the fair value of equity instruments granted, was determined, including the option pricing model used and the inputs to that model (share price, exercise price, expected volatility, option life, expected dividends, risk-free interest rate, and any other inputs including modifications)",
+          "reference_paragraph": "IFRS 2.46-47",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS2-006",
+          "description": "Disclose the total expense recognised for the period arising from share-based payment transactions in which the goods or services received did not qualify for recognition as assets (i.e., recognised as expense), showing separately the portion from equity-settled and cash-settled arrangements",
+          "reference_paragraph": "IFRS 2.51(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS2-007",
+          "description": "Disclose the total carrying amount at the end of the period for liabilities arising from share-based payment transactions",
+          "reference_paragraph": "IFRS 2.51(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS2-008",
+          "description": "Disclose the total intrinsic value at the end of the period of liabilities arising from share-based payment transactions for which the counterparty's right to cash or other assets had vested by the end of the period",
+          "reference_paragraph": "IFRS 2.51(b)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 3",
+      "standard_name": "Business Combinations",
+      "effective_date": "2009-07-01",
+      "last_amended": "2024",
+      "category": "Consolidation",
+      "requirements": [
+        {
+          "id": "IFRS3-001",
+          "description": "Disclose the name and a description of the acquiree, the acquisition date, and the percentage of voting equity interests acquired",
+          "reference_paragraph": "IFRS 3.B64(a)-(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS3-002",
+          "description": "Disclose the primary reasons for the business combination and a description of how the acquirer obtained control",
+          "reference_paragraph": "IFRS 3.B64(d)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS3-003",
+          "description": "Disclose a qualitative description of the factors that make up goodwill recognised (expected synergies, intangible assets not qualifying for separate recognition, etc.)",
+          "reference_paragraph": "IFRS 3.B64(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-004",
+          "description": "Disclose the acquisition-date fair value of the total consideration transferred and the acquisition-date fair value of each major class of consideration (cash, other tangible or intangible assets, liabilities incurred, and equity interests of the acquirer)",
+          "reference_paragraph": "IFRS 3.B64(f)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS3-005",
+          "description": "For contingent consideration arrangements: disclose the amount recognised at the acquisition date, a description of the arrangement, the basis for determining the amount of payment, and an estimate of the range of outcomes (undiscounted) or reasons why a range cannot be estimated",
+          "reference_paragraph": "IFRS 3.B64(g)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-006",
+          "description": "Disclose the recognised amounts at the acquisition date for each major class of assets acquired and liabilities assumed",
+          "reference_paragraph": "IFRS 3.B64(i)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS3-007",
+          "description": "Disclose for each contingent liability recognised: the amount and nature, or if not recognised, the reasons why it cannot be measured reliably",
+          "reference_paragraph": "IFRS 3.B64(j)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-008",
+          "description": "Disclose the total amount of goodwill that is expected to be deductible for tax purposes",
+          "reference_paragraph": "IFRS 3.B64(k)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-009",
+          "description": "If the acquirer is required to disclose, for transactions recognised separately from the business combination: a description of each transaction, how the acquirer accounted for each, the amounts recognised and the line item in which they are recognised, and (if the transaction is the effective settlement of a pre-existing relationship) the method used and the amount of any gain or loss",
+          "reference_paragraph": "IFRS 3.B64(l)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-010",
+          "description": "Disclose the amounts of revenue and profit or loss of the acquiree since the acquisition date included in the consolidated statement of comprehensive income, and revenue and profit or loss of the combined entity as though the acquisition had occurred at the beginning of the annual reporting period (or that it is impracticable to do so)",
+          "reference_paragraph": "IFRS 3.B64(q)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-011",
+          "description": "For bargain purchases, disclose the amount of gain recognised, the line item in which it is recognised, and a description of the reasons the transaction resulted in a gain",
+          "reference_paragraph": "IFRS 3.B64(n)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-012",
+          "description": "For non-controlling interests, disclose the amount measured and the measurement basis (fair value or proportionate share of the acquiree's identifiable net assets)",
+          "reference_paragraph": "IFRS 3.B64(o)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-013",
+          "description": "Disclose acquisition-related costs incurred and the amount recognised as an expense and the line item or items in the statement of comprehensive income in which those costs are recognised",
+          "reference_paragraph": "IFRS 3.B64(m)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS3-014",
+          "description": "If the initial accounting for a business combination is incomplete at the end of the reporting period, disclose that fact and the items for which the accounting is incomplete, together with provisional amounts recognised and any adjustments to provisional amounts during the measurement period",
+          "reference_paragraph": "IFRS 3.B67",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 5",
+      "standard_name": "Non-current Assets Held for Sale and Discontinued Operations",
+      "effective_date": "2005-01-01",
+      "last_amended": "2023",
+      "category": "Assets",
+      "requirements": [
+        {
+          "id": "IFRS5-001",
+          "description": "Present a discontinued operation's results as a single amount on the face of the statement of comprehensive income comprising: post-tax profit or loss of discontinued operations and the post-tax gain or loss recognised on the measurement to fair value less costs to sell or on the disposal of the assets/disposal group",
+          "reference_paragraph": "IFRS 5.33(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS5-002",
+          "description": "Disclose an analysis of the single amount into: revenue, expenses, pre-tax profit or loss, related income tax expense, gain or loss recognised on measurement to fair value less costs to sell or on disposal, and related income tax expense",
+          "reference_paragraph": "IFRS 5.33(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS5-003",
+          "description": "Disclose the net cash flows attributable to the operating, investing, and financing activities of discontinued operations",
+          "reference_paragraph": "IFRS 5.33(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS5-004",
+          "description": "Present separately on the face of the statement of financial position the assets of a disposal group classified as held for sale and the liabilities of a disposal group classified as held for sale (not offset and presented as a single amount)",
+          "reference_paragraph": "IFRS 5.38",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS5-005",
+          "description": "Disclose the major classes of assets and liabilities classified as held for sale either on the face of the statement of financial position or in the notes",
+          "reference_paragraph": "IFRS 5.38",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS5-006",
+          "description": "Disclose a description of the non-current asset (or disposal group), a description of the facts and circumstances of the sale or expected disposal, and the expected manner and timing of disposal",
+          "reference_paragraph": "IFRS 5.41(a)-(c)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS5-007",
+          "description": "Disclose the gain or loss recognised and, if not separately presented in the statement of comprehensive income, the caption that includes that gain or loss",
+          "reference_paragraph": "IFRS 5.41(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS5-008",
+          "description": "Disclose the reportable segment in which the non-current asset (or disposal group) is presented, in accordance with IFRS 8",
+          "reference_paragraph": "IFRS 5.41(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS5-009",
+          "description": "If a non-current asset (or disposal group) ceases to be classified as held for sale, disclose a description of the facts and circumstances leading to the decision and the effect on results for the current and any prior period presented",
+          "reference_paragraph": "IFRS 5.42",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 7",
+      "standard_name": "Financial Instruments: Disclosures",
+      "effective_date": "2007-01-01",
+      "last_amended": "2024",
+      "category": "Financial Instruments",
+      "requirements": [
+        {
+          "id": "IFRS7-001",
+          "description": "Disclose the carrying amounts of each category of financial assets and financial liabilities as defined in IFRS 9: financial assets at amortised cost, at FVTPL, at FVOCI; financial liabilities at amortised cost and at FVTPL",
+          "reference_paragraph": "IFRS 7.8",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-002",
+          "description": "Disclose for financial assets or liabilities designated at FVTPL: the maximum exposure to credit risk, the amount of change in fair value attributable to changes in credit risk, and the method of determining that amount",
+          "reference_paragraph": "IFRS 7.9-11",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-003",
+          "description": "Disclose for financial assets measured at FVOCI (equity investments): which investments have been designated, the fair value of each such investment at the end of the reporting period, dividends recognised during the period, and any transfers within equity",
+          "reference_paragraph": "IFRS 7.11A-11B",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-004",
+          "description": "If the entity has reclassified financial assets, disclose: the date of reclassification, a detailed explanation and quantitative description, the fair value at reclassification date, and the effective interest rate and expected cash flows",
+          "reference_paragraph": "IFRS 7.12B-12D",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-005",
+          "description": "Disclose for financial assets and liabilities offset in the statement of financial position: the gross amounts, amounts offset, the net amount presented, and amounts subject to master netting arrangements not offset",
+          "reference_paragraph": "IFRS 7.13A-13F",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-006",
+          "description": "Disclose collateral: the carrying amount of financial assets pledged as collateral for liabilities or contingent liabilities, the terms and conditions relating to the pledge, and for collateral held: carrying amount, terms and conditions, and accounting policies for collateral not readily convertible to cash",
+          "reference_paragraph": "IFRS 7.14-15",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-007",
+          "description": "Disclose for the allowance account for credit losses: changes during the period for each class of financial asset (including a reconciliation)",
+          "reference_paragraph": "IFRS 7.16",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-008",
+          "description": "Disclose for compound financial instruments with multiple embedded derivatives: the existence of those features",
+          "reference_paragraph": "IFRS 7.17",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-009",
+          "description": "Disclose defaults and breaches of loan terms during the period: details of any defaults of principal, interest, sinking fund, or redemption terms; the carrying amount of loans payable in default; and whether the default was remedied or the terms of the loans renegotiated",
+          "reference_paragraph": "IFRS 7.18-19",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-010",
+          "description": "Disclose net gains or net losses on each category of financial instruments, separately showing gains or losses from financial assets/liabilities at FVTPL (designating separately those designated vs mandatory), financial assets at amortised cost, financial liabilities at amortised cost, and financial assets at FVOCI",
+          "reference_paragraph": "IFRS 7.20(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-011",
+          "description": "Disclose total interest income and total interest expense (calculated using the effective interest method) for financial assets/liabilities not at FVTPL",
+          "reference_paragraph": "IFRS 7.20(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-012",
+          "description": "Disclose fee income and expense (other than amounts included in determining the effective interest rate) arising from financial assets/liabilities not at FVTPL, and from trust and other fiduciary activities",
+          "reference_paragraph": "IFRS 7.20(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-013",
+          "description": "Disclose an analysis of the gain or loss recognised in profit or loss arising from the derecognition of financial assets at amortised cost, showing separately gains and losses. Disclose the reasons for derecognition",
+          "reference_paragraph": "IFRS 7.20A",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-014",
+          "description": "Disclose for each type of hedge (fair value hedge, cash flow hedge, hedge of net investment in foreign operation): a description, the financial instruments designated as hedging instruments (fair values), and the nature of the risks being hedged",
+          "reference_paragraph": "IFRS 7.22",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-015",
+          "description": "Disclose for cash flow hedges: the periods when the cash flows are expected to occur and when they are expected to affect profit or loss, amounts recognised in OCI, amounts reclassified from OCI to profit or loss, and any ineffectiveness recognised",
+          "reference_paragraph": "IFRS 7.23-24",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-016",
+          "description": "Disclose for fair value hedges: gains or losses on the hedging instrument and on the hedged item attributable to the hedged risk",
+          "reference_paragraph": "IFRS 7.24A",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-017",
+          "description": "Disclose the entity's risk management strategy for each risk category: exposures to credit risk, liquidity risk, and market risk (including interest rate risk, currency risk, and other price risk), including a description of how each risk arises",
+          "reference_paragraph": "IFRS 7.33",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-018",
+          "description": "Disclose for credit risk: the maximum exposure to credit risk (without taking into account collateral), a description of collateral held, information about the credit quality of financial assets, and the amount of financial assets that would otherwise be past due or impaired whose terms have been renegotiated",
+          "reference_paragraph": "IFRS 7.35-38",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-019",
+          "description": "Disclose for expected credit losses (ECL): the inputs, assumptions, and estimation techniques used to measure ECL, how forward-looking information has been incorporated, and changes in estimation techniques and significant assumptions during the period",
+          "reference_paragraph": "IFRS 7.35F",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-020",
+          "description": "Disclose for ECL: reconciliation from opening to closing balance of the loss allowance, showing separately changes for 12-month ECL, lifetime ECL for assets not credit-impaired, and lifetime ECL for credit-impaired assets",
+          "reference_paragraph": "IFRS 7.35H",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-021",
+          "description": "Disclose for credit risk: the gross carrying amount of financial assets by credit risk rating grades, showing separately 12-month ECL, lifetime ECL (not credit-impaired), lifetime ECL (credit-impaired), and purchased or originated credit-impaired",
+          "reference_paragraph": "IFRS 7.35M",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-022",
+          "description": "Disclose a maturity analysis for non-derivative financial liabilities (including issued financial guarantee contracts) showing remaining contractual maturities using undiscounted cash flows",
+          "reference_paragraph": "IFRS 7.39",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS7-023",
+          "description": "Disclose a maturity analysis for derivative financial liabilities, including contractual maturities when this is essential for understanding the timing of cash flows",
+          "reference_paragraph": "IFRS 7.39(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-024",
+          "description": "Describe how the entity manages liquidity risk inherent in the maturity analyses",
+          "reference_paragraph": "IFRS 7.39(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-025",
+          "description": "Disclose a sensitivity analysis for each type of market risk showing how profit or loss and equity would have been affected by reasonably possible changes in the relevant risk variable, the methods and assumptions used, and any changes from the prior period",
+          "reference_paragraph": "IFRS 7.40-42",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS7-026",
+          "description": "Disclose information about transfers of financial assets that are not derecognised: the nature of the assets transferred, the nature of the risks and rewards of ownership, and the carrying amounts and associated liabilities",
+          "reference_paragraph": "IFRS 7.42D-42E",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 8",
+      "standard_name": "Operating Segments",
+      "effective_date": "2009-01-01",
+      "last_amended": "2023",
+      "category": "General",
+      "requirements": [
+        {
+          "id": "IFRS8-001",
+          "description": "Disclose factors used to identify the entity's reportable segments and types of products and services from which each reportable segment derives its revenues",
+          "reference_paragraph": "IFRS 8.22",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS8-002",
+          "description": "Disclose a measure of profit or loss for each reportable segment. Also disclose total assets and total liabilities for each reportable segment if such amounts are regularly provided to the chief operating decision maker (CODM)",
+          "reference_paragraph": "IFRS 8.23",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS8-003",
+          "description": "Disclose for each reportable segment (if included in the measure reviewed by or otherwise regularly provided to the CODM): revenues from external customers, intersegment revenues, interest revenue, interest expense, depreciation and amortisation, material items of income and expense, share of profit or loss of associates/JVs, income tax expense or income, and material non-cash items other than depreciation and amortisation",
+          "reference_paragraph": "IFRS 8.23",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS8-004",
+          "description": "Disclose the amount of investments in associates and joint ventures accounted for by the equity method if regularly provided to the CODM, and the amounts of additions to non-current assets for each reportable segment",
+          "reference_paragraph": "IFRS 8.24",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS8-005",
+          "description": "Provide reconciliations of the totals of segment revenues, reported segment measures of profit or loss, segment assets, segment liabilities, and every other material segment item to corresponding entity amounts",
+          "reference_paragraph": "IFRS 8.28",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS8-006",
+          "description": "Disclose revenues from external customers for each product and service, or each group of similar products and services (entity-wide if segments are not based on products/services)",
+          "reference_paragraph": "IFRS 8.32",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS8-007",
+          "description": "Disclose entity-wide geographic information: revenues from external customers attributed to the entity's country of domicile and attributed to all foreign countries in total (with separate disclosure of individual countries if material), and non-current assets by location",
+          "reference_paragraph": "IFRS 8.33",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS8-008",
+          "description": "Disclose information about the degree of reliance on major customers: if revenues from transactions with a single external customer amount to 10% or more of the entity's revenues, disclose that fact, the total amount of revenues from each such customer, and the identity of the segment(s) reporting the revenues (without naming the customer)",
+          "reference_paragraph": "IFRS 8.34",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS8-009",
+          "description": "Explain the basis of accounting for intersegment transactions",
+          "reference_paragraph": "IFRS 8.27(a)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 9",
+      "standard_name": "Financial Instruments",
+      "effective_date": "2018-01-01",
+      "last_amended": "2024",
+      "category": "Financial Instruments",
+      "requirements": [
+        {
+          "id": "IFRS9-001",
+          "description": "Disclose the measurement basis (amortised cost, FVTPL, or FVOCI) for each class of financial assets and financial liabilities (Note: most disclosure requirements are in IFRS 7)",
+          "reference_paragraph": "IFRS 7.8 (via IFRS 9)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS9-002",
+          "description": "For financial assets designated at FVOCI (equity instruments), disclose which investments have been so designated, fair value at reporting date, dividends recognised, and the reasons for the designation",
+          "reference_paragraph": "IFRS 7.11A-11B (via IFRS 9)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS9-003",
+          "description": "For financial liabilities designated at FVTPL, disclose the amount of change in fair value attributable to changes in the credit risk of the liability and the methods used to determine that amount",
+          "reference_paragraph": "IFRS 7.10-10A (via IFRS 9)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS9-004",
+          "description": "Disclose the entity's hedge accounting risk management strategy: for each risk category, the risk management strategy, how hedging is applied, and the extent to which the entity's risk exposures are managed through hedging",
+          "reference_paragraph": "IFRS 7.22A-22C (via IFRS 9)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS9-005",
+          "description": "For hedge accounting, disclose quantitative information on the hedging instrument (notional amounts, carrying amounts, line items, changes in fair value used for measuring hedge ineffectiveness) and the hedged item for each type of hedge and each risk category",
+          "reference_paragraph": "IFRS 7.24A-24B (via IFRS 9)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS9-006",
+          "description": "Disclose the methods, inputs, and assumptions used for estimating expected credit losses, including how forward-looking information has been incorporated",
+          "reference_paragraph": "IFRS 7.35F (via IFRS 9)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS9-007",
+          "description": "For modified financial assets, disclose the amortised cost before modification and the net modification gain or loss recognised",
+          "reference_paragraph": "IFRS 7.35J (via IFRS 9)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS9-008",
+          "description": "Disclose the contractual amount outstanding on financial assets that were written off during the period and are still subject to enforcement activity",
+          "reference_paragraph": "IFRS 7.35L (via IFRS 9)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 10",
+      "standard_name": "Consolidated Financial Statements",
+      "effective_date": "2013-01-01",
+      "last_amended": "2023",
+      "category": "Consolidation",
+      "requirements": [
+        {
+          "id": "IFRS10-001",
+          "description": "Disclose significant judgements and assumptions made in determining that the entity controls another entity (when assessment is not straightforward), including changes in facts and circumstances",
+          "reference_paragraph": "IFRS 12.7-9 (via IFRS 10)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS10-002",
+          "description": "Disclose information about the composition of the group (list of significant subsidiaries, their principal activities, and the proportion of ownership interests and voting rights)",
+          "reference_paragraph": "IFRS 12.10-12 (via IFRS 10)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS10-003",
+          "description": "If a parent uses the investment entity exception and does not consolidate but measures investments at fair value, disclose that fact and information about each unconsolidated subsidiary",
+          "reference_paragraph": "IFRS 12.19A-19G (via IFRS 10)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS10-004",
+          "description": "Disclose significant restrictions on the entity's ability to access or use assets and settle liabilities of the group (such as restrictions on dividends, loans or advances from subsidiaries, etc.)",
+          "reference_paragraph": "IFRS 12.13 (via IFRS 10)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS10-005",
+          "description": "Disclose the nature and extent of significant non-controlling interests, including: the name, principal place of business, proportion of ownership interests held by NCI, proportion of voting rights held by NCI, profit or loss allocated to NCI, accumulated NCI at end of period, and summarised financial information about the subsidiary",
+          "reference_paragraph": "IFRS 12.12 (via IFRS 10)",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 12",
+      "standard_name": "Disclosure of Interests in Other Entities",
+      "effective_date": "2013-01-01",
+      "last_amended": "2023",
+      "category": "Consolidation",
+      "requirements": [
+        {
+          "id": "IFRS12-001",
+          "description": "Disclose significant judgements and assumptions made in determining: the nature of the interest in another entity or arrangement, the type of joint arrangement, and that it meets the definition of an investment entity (if applicable)",
+          "reference_paragraph": "IFRS 12.7-9",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS12-002",
+          "description": "Disclose for each subsidiary that has non-controlling interests material to the reporting entity: name, principal place of business, proportion of ownership interests and voting rights held by NCI, profit or loss allocated to NCI, accumulated NCI, and summarised financial information",
+          "reference_paragraph": "IFRS 12.12",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS12-003",
+          "description": "Disclose significant restrictions on the entity's ability to access or use assets and settle liabilities of the group, including the nature and extent of protective rights of non-controlling interests, and the carrying amounts of the assets and liabilities to which those restrictions relate",
+          "reference_paragraph": "IFRS 12.13",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS12-004",
+          "description": "Disclose for changes in a parent's ownership interest in a subsidiary that do not result in a loss of control: a schedule showing the effects on equity attributable to the owners of the parent",
+          "reference_paragraph": "IFRS 12.18",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS12-005",
+          "description": "Disclose the nature of, and changes in, the risks associated with interests in consolidated structured entities, including contractual arrangements that could require the parent or its subsidiaries to provide financial support",
+          "reference_paragraph": "IFRS 12.14-17",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS12-006",
+          "description": "For interests in joint arrangements and associates, disclose: the name, nature of the relationship, the principal place of business, the proportion of ownership interest or participating share, and the method used to account for the interest",
+          "reference_paragraph": "IFRS 12.21",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS12-007",
+          "description": "For material joint ventures and associates, disclose summarised financial information including: current assets, non-current assets, current liabilities, non-current liabilities, revenue, profit or loss from continuing operations, post-tax profit or loss from discontinued operations, OCI, and total comprehensive income",
+          "reference_paragraph": "IFRS 12.B12-B13",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS12-008",
+          "description": "For interests in unconsolidated structured entities, disclose: the nature, purpose, size, and activities of the structured entity and how it is financed; the nature of risks including the entity's maximum exposure to loss; and any support provided",
+          "reference_paragraph": "IFRS 12.26-31",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 13",
+      "standard_name": "Fair Value Measurement",
+      "effective_date": "2013-01-01",
+      "last_amended": "2023",
+      "category": "Measurement",
+      "requirements": [
+        {
+          "id": "IFRS13-001",
+          "description": "Disclose for each class of assets and liabilities measured at fair value: the fair value measurement at the end of the reporting period and the level of the fair value hierarchy (Level 1, 2, or 3)",
+          "reference_paragraph": "IFRS 13.93(a)-(b)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS13-002",
+          "description": "Disclose for each class of assets and liabilities measured at fair value: any transfers between Level 1 and Level 2 of the fair value hierarchy, the reasons for those transfers, and the entity's policy for determining when transfers are deemed to have occurred",
+          "reference_paragraph": "IFRS 13.93(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-003",
+          "description": "For fair value measurements categorised within Level 2 and Level 3, disclose a description of the valuation techniques and the inputs used in the fair value measurement",
+          "reference_paragraph": "IFRS 13.93(d)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS13-004",
+          "description": "For recurring Level 3 fair value measurements, disclose: a reconciliation from opening balances to closing balances (showing separately total gains or losses in P&L, in OCI, purchases, sales, issues, settlements, and transfers into/out of Level 3)",
+          "reference_paragraph": "IFRS 13.93(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-005",
+          "description": "For recurring Level 3 fair value measurements, disclose: the amount of total gains or losses included in profit or loss that are attributable to the change in unrealised gains or losses relating to assets and liabilities held at the end of the reporting period, and the line item(s) in which those unrealised gains or losses are recognised",
+          "reference_paragraph": "IFRS 13.93(f)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-006",
+          "description": "For Level 3 fair value measurements, disclose quantitative information about significant unobservable inputs used",
+          "reference_paragraph": "IFRS 13.93(d)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-007",
+          "description": "For Level 3 fair value measurements, disclose a description of the valuation processes used by the entity (e.g., how it decides its valuation policies, procedures, and analyses of changes)",
+          "reference_paragraph": "IFRS 13.93(g)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-008",
+          "description": "For recurring Level 3 fair value measurements, disclose a narrative description of the sensitivity of the fair value measurement to changes in unobservable inputs if a change in those inputs to a different amount might result in a significantly higher or lower fair value measurement",
+          "reference_paragraph": "IFRS 13.93(h)(i)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-009",
+          "description": "If the highest and best use of a non-financial asset differs from its current use, disclose that fact and why the non-financial asset is being used in a manner that differs from its highest and best use",
+          "reference_paragraph": "IFRS 13.93(i)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS13-010",
+          "description": "For assets and liabilities not measured at fair value but for which fair value is disclosed, disclose the fair value, the level of the fair value hierarchy, and (for Level 2 and 3) the valuation technique and inputs used",
+          "reference_paragraph": "IFRS 13.97",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 15",
+      "standard_name": "Revenue from Contracts with Customers",
+      "effective_date": "2018-01-01",
+      "last_amended": "2023",
+      "category": "Revenue",
+      "requirements": [
+        {
+          "id": "IFRS15-001",
+          "description": "Disaggregate revenue recognised from contracts with customers into categories that depict how the nature, amount, timing, and uncertainty of revenue and cash flows are affected by economic factors (e.g., by type of good or service, geography, market, type of contract, contract duration, timing of transfer, and sales channels)",
+          "reference_paragraph": "IFRS 15.114-115",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS15-002",
+          "description": "Disclose the opening and closing balances of receivables, contract assets, and contract liabilities from contracts with customers",
+          "reference_paragraph": "IFRS 15.116(a)",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS15-003",
+          "description": "Disclose revenue recognised in the reporting period that was included in the contract liability balance at the beginning of the period",
+          "reference_paragraph": "IFRS 15.116(b)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-004",
+          "description": "Disclose revenue recognised in the reporting period from performance obligations satisfied (or partially satisfied) in previous periods (e.g., changes in transaction price)",
+          "reference_paragraph": "IFRS 15.116(c)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-005",
+          "description": "Disclose information about performance obligations: when the entity typically satisfies its performance obligations (e.g., upon shipment, upon delivery, as services are rendered, upon completion), the significant payment terms, the nature of goods or services promised, and obligations for returns/refunds/warranties",
+          "reference_paragraph": "IFRS 15.119",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS15-006",
+          "description": "Disclose the aggregate amount of the transaction price allocated to performance obligations that are unsatisfied (or partially unsatisfied) at the end of the reporting period, and an explanation of when the entity expects to recognise those amounts as revenue",
+          "reference_paragraph": "IFRS 15.120",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-007",
+          "description": "Disclose the judgements and changes in judgements that significantly affect the determination of the amount and timing of revenue, including the timing of satisfaction of performance obligations and the transaction price and amounts allocated to performance obligations",
+          "reference_paragraph": "IFRS 15.123-126",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-008",
+          "description": "For determining the timing of satisfaction of performance obligations, disclose the methods used to recognise revenue for performance obligations satisfied over time and an explanation of why those methods are a faithful depiction of the transfer of goods or services",
+          "reference_paragraph": "IFRS 15.124",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-009",
+          "description": "For determining the transaction price and amounts allocated, disclose: methods, inputs, and assumptions used for estimating variable consideration, assessing whether variable consideration is constrained, allocating the transaction price, and measuring obligations for returns, refunds, and similar obligations",
+          "reference_paragraph": "IFRS 15.126",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-010",
+          "description": "Disclose the closing balance of assets recognised from the costs to obtain or fulfil a contract, the amount of amortisation and impairment losses recognised, and the method used to determine the amortisation",
+          "reference_paragraph": "IFRS 15.128",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS15-011",
+          "description": "Disclose the practical expedients used (e.g., for remaining performance obligations, for significant financing component, for costs to obtain a contract)",
+          "reference_paragraph": "IFRS 15.129",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 16",
+      "standard_name": "Leases",
+      "effective_date": "2019-01-01",
+      "last_amended": "2024",
+      "category": "Leases",
+      "requirements": [
+        {
+          "id": "IFRS16-001",
+          "description": "Disclose for right-of-use assets: depreciation charge by class of underlying asset, additions to right-of-use assets, carrying amount at the end of the reporting period by class of underlying asset",
+          "reference_paragraph": "IFRS 16.53",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS16-002",
+          "description": "Disclose: interest expense on lease liabilities, the expense relating to short-term leases (if the short-term lease exemption is applied), the expense relating to leases of low-value assets, and the expense relating to variable lease payments not included in lease liabilities",
+          "reference_paragraph": "IFRS 16.53(a)-(d)/55",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS16-003",
+          "description": "Disclose income from subleasing right-of-use assets",
+          "reference_paragraph": "IFRS 16.53(e)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-004",
+          "description": "Disclose total cash outflow for leases",
+          "reference_paragraph": "IFRS 16.53(g)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-005",
+          "description": "Disclose gains or losses arising from sale and leaseback transactions",
+          "reference_paragraph": "IFRS 16.53(f)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-006",
+          "description": "Provide a maturity analysis of lease liabilities showing the undiscounted cash flows on an annual basis for a minimum of the first five years and a total of the amounts for the remaining years, reconciled to the carrying amount of lease liabilities",
+          "reference_paragraph": "IFRS 16.58 / IFRS 7.39",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-007",
+          "description": "Disclose additional qualitative and quantitative information about leasing activities necessary to meet the overall disclosure objective (e.g., nature of leasing activities, future cash outflows to which the lessee is potentially exposed that are not reflected in lease liabilities, restrictions or covenants imposed by leases, and sale and leaseback transactions)",
+          "reference_paragraph": "IFRS 16.59",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-008",
+          "description": "If right-of-use assets meet the definition of investment property, apply the disclosure requirements of IAS 40 (the lessee need not repeat the disclosures provided for IAS 40 but must disclose that it applies the fair value model to those right-of-use assets)",
+          "reference_paragraph": "IFRS 16.56",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-009",
+          "description": "If the lessee does not present right-of-use assets separately from other assets in the statement of financial position, disclose which line items include right-of-use assets and their carrying amounts",
+          "reference_paragraph": "IFRS 16.47(a)",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-010",
+          "description": "Lessors: for finance leases, disclose selling profit or loss, finance income on the net investment, income relating to variable lease payments not included in the net investment, qualitative and quantitative explanation of significant changes in the carrying amount of the net investment, and a maturity analysis of lease payments receivable",
+          "reference_paragraph": "IFRS 16.90-93",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-011",
+          "description": "Lessors: for operating leases, disclose lease income (separately disclosing income relating to variable lease payments that do not depend on an index or a rate) and apply IAS 16 disclosure for underlying assets (or IAS 40/IAS 38 as applicable), and a maturity analysis of lease payments",
+          "reference_paragraph": "IFRS 16.90-97",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS16-012",
+          "description": "Lessors: disclose how the entity manages the risk associated with any rights it retains in underlying assets, and its risk management strategy for the residual value of leased assets",
+          "reference_paragraph": "IFRS 16.92",
+          "commonly_missed": true
+        }
+      ]
+    },
+    {
+      "standard_number": "IFRS 17",
+      "standard_name": "Insurance Contracts",
+      "effective_date": "2023-01-01",
+      "last_amended": "2024",
+      "category": "Insurance",
+      "requirements": [
+        {
+          "id": "IFRS17-001",
+          "description": "Disclose the amounts recognised in the financial statements: insurance revenue, insurance service expenses, and insurance finance income or expenses",
+          "reference_paragraph": "IFRS 17.97-100",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS17-002",
+          "description": "Provide reconciliations of the opening to closing balances of the carrying amounts of portfolios of insurance contracts, showing separately: the liability for remaining coverage and the liability for incurred claims, and changes relating to insurance service result, insurance finance income or expenses, and cash flows",
+          "reference_paragraph": "IFRS 17.100-109",
+          "commonly_missed": false
+        },
+        {
+          "id": "IFRS17-003",
+          "description": "Disclose the amount of the contractual service margin (CSM) recognised in insurance revenue for each period, and a reconciliation of opening to closing CSM showing the effect of new contracts, interest accretion, changes in estimates, currency exchange differences, and amounts recognised in insurance revenue",
+          "reference_paragraph": "IFRS 17.101(c)/107",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-004",
+          "description": "Disclose insurance revenue analysed separately into: amounts relating to the changes in the liability for remaining coverage (excluding the loss component), expected incurred claims and expenses, release of risk adjustment for non-financial risk, and insurance acquisition cash flows amortisation",
+          "reference_paragraph": "IFRS 17.106",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-005",
+          "description": "Disclose the effect of contracts initially recognised in the period on the reconciliation: the amount of the CSM for profitable groups of contracts, the amount of any onerous contracts recognised as a loss, and the estimated present value of future cash outflows for onerous contracts",
+          "reference_paragraph": "IFRS 17.107",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-006",
+          "description": "Disclose information about insurance finance income or expenses, including an explanation of the total amount and composition, and whether the entity disaggregates insurance finance income or expenses between profit or loss and OCI",
+          "reference_paragraph": "IFRS 17.110-113",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-007",
+          "description": "Disclose the nature and extent of the risks that arise from insurance contracts: the risk of loss from insurance contracts, credit risk, liquidity risk, and market risk, including sensitivity analyses",
+          "reference_paragraph": "IFRS 17.121-132",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-008",
+          "description": "Disclose a maturity analysis showing the timing of net cash flows from groups of insurance contracts (or the amounts remaining recognised in the statement of financial position based on the period in which they are expected to be derecognised)",
+          "reference_paragraph": "IFRS 17.132",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-009",
+          "description": "Disclose the significant judgements and changes in judgements made in applying IFRS 17: the methods used to measure insurance contracts, the processes for estimating the inputs, the approach used to determine the discount rates, and the confidence level used to determine the risk adjustment for non-financial risk",
+          "reference_paragraph": "IFRS 17.117-120",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-010",
+          "description": "Disclose the confidence level used to determine the risk adjustment for non-financial risk. If the entity uses a technique other than the confidence level technique, disclose the technique used and the confidence level corresponding to the results of that technique",
+          "reference_paragraph": "IFRS 17.119",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-011",
+          "description": "Disclose the yield curve (or range of yield curves) used to discount cash flows that do not vary based on returns on underlying items, and the method used to determine those rates",
+          "reference_paragraph": "IFRS 17.120",
+          "commonly_missed": true
+        },
+        {
+          "id": "IFRS17-012",
+          "description": "For contracts measured under the variable fee approach (VFA) or general model with direct participation features, disclose the composition of the underlying items and their fair values",
+          "reference_paragraph": "IFRS 17.111-113",
+          "commonly_missed": true
+        }
+      ]
+    }
+  ],
+  "summary_statistics": {
+    "total_standards_covered": 32,
+    "total_requirements": 247,
+    "commonly_missed_count": 157,
+    "categories": [
+      "General",
+      "Assets",
+      "Liabilities",
+      "Taxes",
+      "Financial Instruments",
+      "Consolidation",
+      "Equity",
+      "Measurement",
+      "Revenue",
+      "Leases",
+      "Insurance"
+    ]
+  },
+  "big4_audit_focus_areas": {
+    "description": "Areas consistently highlighted by Big 4 firms as common audit findings and missed disclosures",
+    "top_missed_disclosures": [
+      {
+        "area": "IAS 1 - Key estimation uncertainties and critical judgements",
+        "detail": "Entities frequently provide boilerplate disclosures rather than entity-specific information about sources of estimation uncertainty and their carrying amounts"
+      },
+      {
+        "area": "IFRS 7 - Expected credit loss methodology and sensitivity",
+        "detail": "The ECL model inputs, assumptions, and forward-looking information disclosures under IFRS 9/IFRS 7 are frequently insufficient"
+      },
+      {
+        "area": "IAS 36 - Goodwill impairment testing assumptions and sensitivity",
+        "detail": "Entities often fail to disclose key assumptions, discount rates, growth rates, and sensitivity analysis for CGUs with significant goodwill"
+      },
+      {
+        "area": "IFRS 15 - Disaggregation of revenue and remaining performance obligations",
+        "detail": "Disaggregation often does not go deep enough, and the unsatisfied performance obligation disclosure is frequently omitted or incomplete"
+      },
+      {
+        "area": "IFRS 16 - Maturity analysis and total cash outflow for leases",
+        "detail": "Maturity analysis of lease liabilities and total cash outflow disclosures are frequently missing or incomplete"
+      },
+      {
+        "area": "IFRS 13 - Level 3 fair value measurements",
+        "detail": "Reconciliations, unobservable inputs, sensitivity analysis, and valuation processes for Level 3 measurements are commonly incomplete"
+      },
+      {
+        "area": "IAS 12 - Deferred tax and rate reconciliation",
+        "detail": "The tax rate reconciliation often lacks adequate explanation of reconciling items, and deferred tax by type of temporary difference is incomplete"
+      },
+      {
+        "area": "IAS 24 - Related party disclosures",
+        "detail": "Entities sometimes omit required disclosures about terms and conditions of outstanding balances and fail to disclose all categories of related parties separately"
+      },
+      {
+        "area": "IAS 7 - Financing activities reconciliation",
+        "detail": "The reconciliation of changes in liabilities arising from financing activities (IAS 7.44A-44E) is a newer requirement that is frequently missed"
+      },
+      {
+        "area": "IFRS 3 - Business combination disclosures",
+        "detail": "Entities often fail to disclose qualitative factors of goodwill, pro-forma revenue and profit, and contingent consideration details"
+      }
+    ]
+  }
+}

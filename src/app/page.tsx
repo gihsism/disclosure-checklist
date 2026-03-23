@@ -53,12 +53,17 @@ export default function Home() {
         body: formData,
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Analysis failed");
+      const text = await response.text();
+      let data: AnalysisResult;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Server error — check that the API key is configured correctly.");
       }
 
-      const data: AnalysisResult = await response.json();
+      if (!response.ok) {
+        throw new Error((data as unknown as { error: string }).error || "Analysis failed");
+      }
       setResult(data);
       setProgress("");
     } catch (err: unknown) {

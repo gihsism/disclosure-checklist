@@ -1,11 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeFinancialStatements } from "@/lib/analyze";
 import { ifrsRequirements } from "@/data/ifrs-checklist";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
+
+// Disable worker for serverless
+GlobalWorkerOptions.workerSrc = "";
 
 export const maxDuration = 300; // 5 min for Vercel
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require("pdf-parse");
+async function extractPdfText(buffer: Buffer): Promise<string> {
+  const data = new Uint8Array(buffer);
+  const doc = await getDocument({ data, useWorkerFetch: false, isEvalSupported: false, useSystemFonts: true }).promise;
+  const textParts: string[] = [];
+
+  for (let i = 1; i <= doc.numPages; i++) {
+    const page = await doc.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items
+      .filter((item) => "str" in item)
+      .map((item) => (item as { str: string }).str)
+      .join(" ");
+    textParts.push(pageText);
+  }
+
+  await doc.destroy();
+  return textParts.join("\n\n");
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,8 +43,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     if (file.name.endsWith(".pdf")) {
-      const pdfData = await pdfParse(buffer);
-      text = pdfData.text;
+      text = await extractPdfText(buffer);
     } else if (
       file.name.endsWith(".txt") ||
       file.name.endsWith(".md") ||
