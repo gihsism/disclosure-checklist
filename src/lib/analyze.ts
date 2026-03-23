@@ -22,6 +22,8 @@ export async function analyzeFinancialStatements(
         role: "user",
         content: `You are an expert auditor reviewing financial statements for IFRS disclosure compliance. Analyze the following financial statement text against each disclosure requirement listed below.
 
+The financial statement text is annotated with [PAGE X] markers at the start of each page.
+
 For each requirement, determine its status:
 - "present" — the disclosure is adequately made
 - "partial" — some disclosure exists but is incomplete
@@ -29,10 +31,11 @@ For each requirement, determine its status:
 - "not_applicable" — the requirement does not apply to this entity based on the financial statements
 
 Also provide:
+- "pages" — the page number(s) where the disclosure is found (e.g. "42", "42-44", "15, 67"). Use "N/A" if missing or not applicable.
 - "notes" — a brief explanation of your assessment
 - "evidence" — quote or reference the specific text from the financial statements that supports your assessment (empty string if missing)
 
-IMPORTANT: Be thorough and precise. Reference specific paragraphs and numbers from the financial statements.
+IMPORTANT: Be thorough and precise. ALWAYS specify the exact page number(s) from [PAGE X] markers where you found the relevant disclosure. This is critical for auditors to verify your findings.
 
 === FINANCIAL STATEMENT TEXT ===
 ${text.substring(0, 100000)}
@@ -45,6 +48,7 @@ Return a JSON array of objects with this exact structure:
   {
     "id": "requirement_id",
     "status": "present|partial|missing|not_applicable",
+    "pages": "page number(s) or N/A",
     "notes": "explanation",
     "evidence": "quoted text or reference"
   }
@@ -63,6 +67,7 @@ Return ONLY the JSON array, no other text.`,
   let analysisResults: Array<{
     id: string;
     status: string;
+    pages: string;
     notes: string;
     evidence: string;
   }>;
@@ -84,6 +89,7 @@ Return ONLY the JSON array, no other text.`,
     return {
       ...req,
       status: (result?.status as ChecklistItem["status"]) || "unchecked",
+      pages: result?.pages || "N/A",
       notes: result?.notes || "",
       evidence: result?.evidence || "",
     };

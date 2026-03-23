@@ -12,6 +12,7 @@ export interface ChecklistItem extends DisclosureRequirement {
   status: "present" | "missing" | "partial" | "not_applicable" | "unchecked";
   notes: string;
   evidence: string;
+  pages: string;
 }
 
 export interface AnalysisResult {

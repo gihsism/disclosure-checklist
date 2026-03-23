@@ -141,6 +141,7 @@ export default function AnalysisResults({
       "Description",
       "Importance",
       "Status",
+      "Page(s)",
       "Notes",
       "Evidence",
     ];
@@ -150,6 +151,7 @@ export default function AnalysisResults({
       `"${item.description.replace(/"/g, '""')}"`,
       item.importance,
       item.status,
+      item.pages || "N/A",
       `"${item.notes.replace(/"/g, '""')}"`,
       `"${item.evidence.replace(/"/g, '""')}"`,
     ]);
@@ -355,6 +357,11 @@ export default function AnalysisResults({
                               >
                                 {item.importance}
                               </span>
+                              {item.pages && item.pages !== "N/A" && (
+                                <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                  p. {item.pages}
+                                </span>
+                              )}
                             </div>
                             <p className="text-sm text-gray-800 mt-1">
                               {item.description}

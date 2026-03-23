@@ -21,7 +21,7 @@ async function extractPdfText(buffer: Buffer): Promise<string> {
       .filter((item) => "str" in item)
       .map((item) => (item as { str: string }).str)
       .join(" ");
-    textParts.push(pageText);
+    textParts.push(`[PAGE ${i}]\n${pageText}`);
   }
 
   await doc.destroy();
