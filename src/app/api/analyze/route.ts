@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeFinancialStatements } from "@/lib/analyze";
 import { ifrsRequirements } from "@/data/ifrs-checklist";
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
-
-// Disable worker for serverless
-GlobalWorkerOptions.workerSrc = "";
-
 export const maxDuration = 300; // 5 min for Vercel
 
 async function extractPdfText(buffer: Buffer): Promise<string> {
+  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/legacy/build/pdf.worker.mjs",
+    import.meta.url
+  ).toString();
+
   const data = new Uint8Array(buffer);
-  const doc = await getDocument({ data, useWorkerFetch: false, isEvalSupported: false, useSystemFonts: true }).promise;
+  const doc = await pdfjsLib.getDocument({ data, useWorkerFetch: false, isEvalSupported: false, useSystemFonts: true }).promise;
   const textParts: string[] = [];
 
   for (let i = 1; i <= doc.numPages; i++) {
