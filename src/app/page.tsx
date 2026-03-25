@@ -17,6 +17,8 @@ export default function Home() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<string>("");
+  const [elapsed, setElapsed] = useState<number>(0);
+  const [timerRef, setTimerRef] = useState<NodeJS.Timeout | null>(null);
 
   const allStandards = getStandardsList().map((s) => s.id);
 
@@ -34,7 +36,14 @@ export default function Home() {
     setIsAnalyzing(true);
     setError(null);
     setResult(null);
+    setElapsed(0);
     setProgress("Uploading and extracting text...");
+
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+    setTimerRef(timer);
 
     try {
       const formData = new FormData();
@@ -42,11 +51,7 @@ export default function Home() {
       formData.append("framework", "ifrs");
       formData.append("standards", selectedStandards.join(","));
 
-      setProgress(
-        "Analyzing disclosures against " +
-          selectedStandards.length +
-          " standards... This may take a few minutes."
-      );
+      setProgress("Analyzing disclosures against " + selectedStandards.length + " standards...");
 
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -73,6 +78,8 @@ export default function Home() {
       setProgress("");
     } finally {
       setIsAnalyzing(false);
+      if (timerRef) clearInterval(timerRef);
+      setTimerRef(null);
     }
   };
 
@@ -181,10 +188,21 @@ export default function Home() {
                 )}
               </button>
 
-              {progress && (
-                <p className="text-sm text-center text-blue-600 animate-pulse">
-                  {progress}
-                </p>
+              {isAnalyzing && (
+                <div className="text-center space-y-2">
+                  <p className="text-sm text-blue-600 animate-pulse">
+                    {progress}
+                  </p>
+                  <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                    <span>
+                      Elapsed: {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
+                    </span>
+                    <span className="text-gray-300">|</span>
+                    <span>
+                      Estimated: ~{Math.max(1, Math.ceil(selectedStandards.length * 0.15))}-{Math.ceil(selectedStandards.length * 0.25)} min
+                    </span>
+                  </div>
+                </div>
               )}
             </section>
 
