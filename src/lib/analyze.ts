@@ -49,12 +49,20 @@ Return ONLY the JSON.`,
   if (jsonText.startsWith("```")) {
     jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
   }
+  // Extract JSON object if wrapped in prose
+  const objMatch = jsonText.match(/\{[\s\S]*\}/);
+  if (objMatch) jsonText = objMatch[0];
 
-  const result = JSON.parse(jsonText);
-  return {
-    relevant: result.relevant || standards,
-    notApplicable: result.not_applicable || [],
-  };
+  try {
+    const result = JSON.parse(jsonText);
+    return {
+      relevant: result.relevant || standards,
+      notApplicable: result.not_applicable || [],
+    };
+  } catch {
+    // If parsing fails, assume all standards are relevant
+    return { relevant: standards, notApplicable: [] };
+  }
 }
 
 // ─── Pass 2: Detailed analysis ──────────────────────────────────
@@ -101,6 +109,7 @@ async function analyzeBatch(
   const response = await client.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 16000,
+    system: "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].",
     messages: [{ role: "user", content: prompt }],
   });
 
@@ -108,10 +117,28 @@ async function analyzeBatch(
   if (content.type !== "text") throw new Error("Unexpected response type");
 
   let jsonText = content.text.trim();
+  // Strip markdown code blocks
   if (jsonText.startsWith("```")) {
     jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
   }
-  return JSON.parse(jsonText);
+  // Extract JSON array if wrapped in prose
+  const arrayMatch = jsonText.match(/\[[\s\S]*\]/);
+  if (arrayMatch) {
+    jsonText = arrayMatch[0];
+  }
+  try {
+    return JSON.parse(jsonText);
+  } catch {
+    // If still can't parse, return defaults for all requirements
+    console.error("Failed to parse AI response, returning defaults. Response start:", jsonText.substring(0, 200));
+    return requirements.map((r) => ({
+      id: r.id,
+      status: "unchecked",
+      pages: "N/A",
+      notes: "Analysis could not be completed for this item — please review manually.",
+      evidence: "",
+    }));
+  }
 }
 
 export async function analyzeFinancialStatements(
