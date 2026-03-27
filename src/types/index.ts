@@ -15,9 +15,18 @@ export interface ChecklistItem extends DisclosureRequirement {
   pages: string;
 }
 
+export interface StandardApplicability {
+  standard: string;
+  standardName: string;
+  applicable: boolean;
+  reason: string;
+  requirementCount: number;
+}
+
 export interface AnalysisResult {
   framework: string;
   checklist: ChecklistItem[];
+  applicability: StandardApplicability[];
   summary: {
     total: number;
     present: number;

@@ -88,6 +88,7 @@ export default function AnalysisResults({
   );
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [showApplicability, setShowApplicability] = useState(false);
 
   // Group by standard
   const grouped = result.checklist.reduce(
@@ -224,6 +225,66 @@ export default function AnalysisResults({
           />
         </div>
       </div>
+
+      {/* Applicability Assessment */}
+      {result.applicability && result.applicability.length > 0 && (
+        <div className="bg-white rounded-xl border p-4">
+          <button
+            onClick={() => setShowApplicability(!showApplicability)}
+            className="w-full flex items-center justify-between"
+          >
+            <h3 className="text-sm font-semibold text-gray-700">
+              Standards Applicability Assessment
+            </h3>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-green-600">
+                {result.applicability.filter((a) => a.applicable).length} applicable
+              </span>
+              <span className="text-xs text-gray-400">
+                {result.applicability.filter((a) => !a.applicable).length} not applicable
+              </span>
+              {showApplicability ? (
+                <ChevronDown className="w-4 h-4 text-gray-400" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              )}
+            </div>
+          </button>
+          {showApplicability && (
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {result.applicability
+                .sort((a, b) => (a.applicable === b.applicable ? 0 : a.applicable ? -1 : 1))
+                .map((item) => (
+                <div
+                  key={item.standard}
+                  className={`flex items-start gap-2 p-2 rounded-lg text-sm ${
+                    item.applicable ? "bg-green-50" : "bg-gray-50"
+                  }`}
+                >
+                  {item.applicable ? (
+                    <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                  ) : (
+                    <MinusCircle className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
+                  )}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-gray-800">
+                        {item.standard}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {item.requirementCount} items
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {item.reason}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">

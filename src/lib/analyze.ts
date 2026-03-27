@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { DisclosureRequirement, ChecklistItem } from "@/types";
+import { DisclosureRequirement, ChecklistItem, StandardApplicability } from "@/types";
 
 const client = new Anthropic();
 
@@ -8,36 +8,48 @@ const MAX_PARALLEL = 10;
 
 type AnalysisItem = { id: string; status: string; pages: string; notes: string; evidence: string };
 
-// ─── Pass 1: Fast relevance scan ────────────────────────────────
-async function identifyRelevantStandards(
+// ─── Pass 1: Fast applicability assessment ──────────────────────
+interface ApplicabilityResult {
+  relevant: string[];
+  notApplicable: string[];
+  assessments: Record<string, { applicable: boolean; reason: string }>;
+}
+
+async function assessApplicability(
   text: string,
   standards: string[]
-): Promise<{ relevant: string[]; notApplicable: string[] }> {
+): Promise<ApplicabilityResult> {
   const response = await client.messages.create({
     model: "claude-sonnet-4-20250514",
-    max_tokens: 2000,
+    max_tokens: 4000,
+    system: "You are an IFRS expert. Respond with ONLY valid JSON, no other text.",
     messages: [
       {
         role: "user",
-        content: `You are an IFRS expert. Quickly scan this financial statement and determine which IFRS/IAS standards are RELEVANT (the entity has these types of transactions/balances) vs NOT APPLICABLE (the entity clearly does not have these).
+        content: `Scan the financial statements below and assess which IFRS/IAS standards are applicable to this entity.
+
+For each standard, determine:
+- Whether it is applicable (the entity has these types of transactions/balances/arrangements)
+- A brief reason explaining why it is or isn't applicable (e.g. "Entity has property, plant and equipment on balance sheet" or "No insurance contracts identified")
 
 Standards to assess:
 ${standards.join(", ")}
 
-Scan the document for: balance sheet line items, note headings, accounting policy descriptions, and any mentions of specific topics (leases, insurance, share-based payments, business combinations, etc.)
+Look at: balance sheet line items, note headings, accounting policy descriptions, industry context, and mentions of specific topics.
 
-=== FINANCIAL STATEMENT TEXT (first 30,000 chars) ===
-${text.substring(0, 30000)}
+=== FINANCIAL STATEMENT TEXT (first 40,000 chars) ===
+${text.substring(0, 40000)}
 
 Return JSON:
 {
-  "relevant": ["IAS 1", "IAS 2", ...],
-  "not_applicable": ["IFRS 17", ...]
+  "assessments": {
+    "IAS 1": { "applicable": true, "reason": "Required for all entities presenting IFRS financial statements" },
+    "IFRS 17": { "applicable": false, "reason": "No insurance contracts or reinsurance arrangements identified" },
+    ...
+  }
 }
 
-Be INCLUSIVE — if unsure, mark as relevant. Only mark not_applicable when you are confident the entity does not have those items (e.g., no insurance contracts = IFRS 17 N/A; no mention of share-based payments = IFRS 2 N/A).
-
-Return ONLY the JSON.`,
+Be INCLUSIVE — if unsure, mark as applicable. Only mark not applicable when you are confident.`,
       },
     ],
   });
@@ -49,19 +61,33 @@ Return ONLY the JSON.`,
   if (jsonText.startsWith("```")) {
     jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
   }
-  // Extract JSON object if wrapped in prose
   const objMatch = jsonText.match(/\{[\s\S]*\}/);
   if (objMatch) jsonText = objMatch[0];
 
   try {
     const result = JSON.parse(jsonText);
-    return {
-      relevant: result.relevant || standards,
-      notApplicable: result.not_applicable || [],
-    };
+    const assessments: Record<string, { applicable: boolean; reason: string }> = result.assessments || {};
+
+    const relevant: string[] = [];
+    const notApplicable: string[] = [];
+
+    for (const std of standards) {
+      const assessment = assessments[std];
+      if (assessment && !assessment.applicable) {
+        notApplicable.push(std);
+      } else {
+        relevant.push(std);
+      }
+    }
+
+    return { relevant, notApplicable, assessments };
   } catch {
     // If parsing fails, assume all standards are relevant
-    return { relevant: standards, notApplicable: [] };
+    const assessments: Record<string, { applicable: boolean; reason: string }> = {};
+    for (const std of standards) {
+      assessments[std] = { applicable: true, reason: "Could not determine — included for review" };
+    }
+    return { relevant: standards, notApplicable: [], assessments };
   }
 }
 
@@ -144,22 +170,38 @@ async function analyzeBatch(
 export async function analyzeFinancialStatements(
   text: string,
   requirements: DisclosureRequirement[]
-): Promise<ChecklistItem[]> {
+): Promise<{ checklist: ChecklistItem[]; applicability: StandardApplicability[] }> {
   const truncatedText = text.substring(0, 180000);
 
-  // Pass 1: Identify which standards are relevant (fast, ~2-3 seconds)
+  // Pass 1: Assess applicability of each standard
   const uniqueStandards = [...new Set(requirements.map((r) => r.standard))];
-  const { notApplicable } = await identifyRelevantStandards(
+  const standardNames: Record<string, string> = {};
+  const standardCounts: Record<string, number> = {};
+  for (const req of requirements) {
+    standardNames[req.standard] = req.standardName;
+    standardCounts[req.standard] = (standardCounts[req.standard] || 0) + 1;
+  }
+
+  const { notApplicable, assessments } = await assessApplicability(
     truncatedText,
     uniqueStandards
   );
 
+  // Build applicability report
+  const applicability: StandardApplicability[] = uniqueStandards.map((std) => {
+    const assessment = assessments[std];
+    return {
+      standard: std,
+      standardName: standardNames[std] || std,
+      applicable: !notApplicable.includes(std),
+      reason: assessment?.reason || (notApplicable.includes(std) ? "Not applicable to this entity" : "Applicable"),
+      requirementCount: standardCounts[std] || 0,
+    };
+  });
+
   // Split requirements: relevant ones get analyzed, N/A ones get auto-marked
   const relevantReqs = requirements.filter(
     (r) => !notApplicable.includes(r.standard)
-  );
-  const naReqs = requirements.filter((r) =>
-    notApplicable.includes(r.standard)
   );
 
   // Pass 2: Analyze relevant requirements in parallel batches
@@ -168,7 +210,6 @@ export async function analyzeFinancialStatements(
     batches.push(relevantReqs.slice(i, i + BATCH_SIZE));
   }
 
-  // All batches in parallel (up to MAX_PARALLEL)
   const allResults: AnalysisItem[] = [];
   for (let i = 0; i < batches.length; i += MAX_PARALLEL) {
     const chunk = batches.slice(i, i + MAX_PARALLEL);
@@ -181,14 +222,14 @@ export async function analyzeFinancialStatements(
   }
 
   // Merge results
-  return requirements.map((req) => {
-    // Auto-mark N/A standards
+  const checklist = requirements.map((req) => {
     if (notApplicable.includes(req.standard)) {
+      const assessment = assessments[req.standard];
       return {
         ...req,
         status: "not_applicable" as const,
         pages: "N/A",
-        notes: `Standard ${req.standard} not applicable — entity does not appear to have these types of transactions/balances.`,
+        notes: assessment?.reason || `Standard ${req.standard} not applicable to this entity.`,
         evidence: "",
       };
     }
@@ -202,4 +243,6 @@ export async function analyzeFinancialStatements(
       evidence: result?.evidence || "",
     };
   });
+
+  return { checklist, applicability };
 }

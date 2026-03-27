@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Run analysis
-    const checklist = await analyzeFinancialStatements(text, requirements);
+    const { checklist, applicability } = await analyzeFinancialStatements(text, requirements);
 
     const summary = {
       total: checklist.length,
@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       framework,
       checklist,
+      applicability,
       summary,
       recommendations,
     });
