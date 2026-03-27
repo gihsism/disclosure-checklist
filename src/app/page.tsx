@@ -63,7 +63,10 @@ export default function Home() {
       try {
         data = JSON.parse(text);
       } catch {
-        throw new Error("Server error — check that the API key is configured correctly.");
+        if (text.includes("FUNCTION_INVOCATION_TIMEOUT") || text.includes("Task timed out")) {
+          throw new Error("Analysis timed out — try selecting fewer standards (10-15 at a time) for large documents.");
+        }
+        throw new Error("Server error — the analysis may have timed out. Try selecting fewer standards.");
       }
 
       if (!response.ok) {

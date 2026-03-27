@@ -3,8 +3,8 @@ import { DisclosureRequirement, ChecklistItem } from "@/types";
 
 const client = new Anthropic();
 
-const BATCH_SIZE = 40;
-const MAX_PARALLEL = 6;
+const BATCH_SIZE = 60;
+const MAX_PARALLEL = 10;
 
 type AnalysisItem = { id: string; status: string; pages: string; notes: string; evidence: string };
 
