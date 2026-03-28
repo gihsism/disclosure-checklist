@@ -404,7 +404,13 @@ export default function AnalysisResults({
                     return (
                       <div key={item.id} className={`${config.bg}`}>
                         <button
-                          onClick={() => toggleItem(item.id)}
+                          onClick={() => {
+                            toggleItem(item.id);
+                            // Navigate PDF to this item's page
+                            if (onPageClick && item.pages && item.pages !== "N/A") {
+                              onPageClick(item.pages);
+                            }
+                          }}
                           className="w-full flex items-start gap-3 p-3 text-left hover:bg-black/5 transition-colors"
                         >
                           <Icon
