@@ -142,6 +142,7 @@ export default function Home() {
         throw new Error((data as unknown as { error: string }).error || "Analysis failed");
       }
       setResult(data);
+      if (pdfUrl) setShowPdf(true);
       saveToHistory(file?.name || "Analysis", data);
       setProgress("");
     } catch (err: unknown) {
@@ -204,7 +205,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      <main className={`mx-auto px-4 py-8 space-y-6 ${result && pdfUrl && showPdf ? "max-w-[1600px]" : "max-w-6xl"}`}>
         {!result ? (
           <>
             {/* Load Previous Results */}

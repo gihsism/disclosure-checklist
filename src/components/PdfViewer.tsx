@@ -34,8 +34,9 @@ export default function PdfViewer({ fileUrl, highlightPage }: PdfViewerProps) {
       <iframe
         ref={iframeRef}
         src={src}
-        className="flex-1 w-full"
+        className="flex-1 w-full min-h-[600px]"
         title="PDF Preview"
+        style={{ border: "none" }}
       />
     </div>
   );
