@@ -6,10 +6,16 @@ import StandardSelector from "@/components/StandardSelector";
 import AnalysisResults from "@/components/AnalysisResults";
 import { AnalysisResult, ChecklistItem } from "@/types";
 import { getStandardsList } from "@/data/ifrs-checklist";
-import { FileSearch, Loader2, Save, Upload as UploadIcon, History } from "lucide-react";
+import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelLeft, History } from "lucide-react";
+import PdfViewer from "@/components/PdfViewer";
+import ReportExport from "@/components/ReportExport";
+import AnalysisHistory, { saveToHistory } from "@/components/AnalysisHistory";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [showPdf, setShowPdf] = useState(true);
+  const [highlightPage, setHighlightPage] = useState<number | undefined>();
   const [selectedStandards, setSelectedStandards] = useState<string[]>(
     getStandardsList().map((s) => s.id)
   );
@@ -136,6 +142,7 @@ export default function Home() {
         throw new Error((data as unknown as { error: string }).error || "Analysis failed");
       }
       setResult(data);
+      saveToHistory(file?.name || "Analysis", data);
       setProgress("");
     } catch (err: unknown) {
       const message =
@@ -229,6 +236,9 @@ export default function Home() {
               </div>
             )}
 
+            {/* Analysis History */}
+            <AnalysisHistory onLoad={(r) => setResult(r)} />
+
             {/* Upload Section */}
             <section className="bg-white rounded-2xl border shadow-sm p-6 space-y-6">
               <div>
@@ -242,7 +252,14 @@ export default function Home() {
               </div>
 
               <FileUpload
-                onFileSelect={setFile}
+                onFileSelect={(f) => {
+                  setFile(f);
+                  if (f && f.name.endsWith(".pdf")) {
+                    setPdfUrl(URL.createObjectURL(f));
+                  } else {
+                    setPdfUrl(null);
+                  }
+                }}
                 selectedFile={file}
                 isAnalyzing={isAnalyzing}
               />
@@ -349,6 +366,7 @@ export default function Home() {
                 Analysis Results
               </h2>
               <div className="ml-auto flex items-center gap-2">
+                <ReportExport result={result} />
                 <button
                   onClick={saveResultToFile}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
@@ -356,12 +374,38 @@ export default function Home() {
                   <Save className="w-3.5 h-3.5" />
                   Save JSON
                 </button>
+                {pdfUrl && (
+                  <button
+                    onClick={() => setShowPdf(!showPdf)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    {showPdf ? <PanelLeftClose className="w-3.5 h-3.5" /> : <PanelLeft className="w-3.5 h-3.5" />}
+                    {showPdf ? "Hide PDF" : "Show PDF"}
+                  </button>
+                )}
               </div>
             </div>
-            <AnalysisResults
-              result={result}
-              onUpdateItem={handleUpdateItem}
-            />
+
+            {/* Side-by-side layout */}
+            <div className={`${pdfUrl && showPdf ? "grid grid-cols-2 gap-4" : ""}`}>
+              {pdfUrl && showPdf && (
+                <div className="sticky top-20 h-[calc(100vh-120px)]">
+                  <PdfViewer fileUrl={pdfUrl} highlightPage={highlightPage} />
+                </div>
+              )}
+              <div>
+                <AnalysisResults
+                  result={result}
+                  onUpdateItem={handleUpdateItem}
+                  onPageClick={(page) => {
+                    if (page && page !== "N/A") {
+                      const p = parseInt(page.split(/[-,]/)[0].trim());
+                      if (!isNaN(p)) setHighlightPage(p);
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </>
         )}
       </main>

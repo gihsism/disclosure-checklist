@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeFinancialStatements } from "@/lib/analyze";
 import { ifrsRequirements } from "@/data/ifrs-checklist";
+import Anthropic from "@anthropic-ai/sdk";
+
 export const maxDuration = 300; // 5 min for Vercel
+
+const anthropic = new Anthropic();
 
 async function extractPdfText(buffer: Buffer): Promise<string> {
   const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
@@ -28,6 +32,37 @@ async function extractPdfText(buffer: Buffer): Promise<string> {
   return textParts.join("\n\n");
 }
 
+// For scanned PDFs: send the PDF directly to Claude's document API
+async function extractPdfViaVision(buffer: Buffer): Promise<string> {
+  const base64 = buffer.toString("base64");
+
+  const response = await anthropic.messages.create({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 16000,
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "document",
+            source: { type: "base64", media_type: "application/pdf", data: base64 },
+          },
+          {
+            type: "text",
+            text: "Extract ALL text from this financial statement PDF. For each page, start with [PAGE X] marker. Preserve all numbers, tables, headings, and structure. Be thorough — include every piece of text visible on each page.",
+          },
+        ],
+      },
+    ],
+  });
+
+  const content = response.content[0];
+  if (content.type === "text") {
+    return content.text;
+  }
+  return "";
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -44,7 +79,19 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     if (file.name.endsWith(".pdf")) {
+      // Try text extraction first
       text = await extractPdfText(buffer);
+
+      // If text extraction yields very little (scanned PDF), try vision
+      const wordCount = text.replace(/\[PAGE \d+\]/g, "").trim().split(/\s+/).length;
+      if (wordCount < 200) {
+        try {
+          text = await extractPdfViaVision(buffer);
+        } catch (visionErr) {
+          console.error("Vision extraction failed, using sparse text:", visionErr);
+          // Continue with whatever text we got
+        }
+      }
     } else if (
       file.name.endsWith(".txt") ||
       file.name.endsWith(".md") ||
@@ -58,9 +105,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!text || text.trim().length < 100) {
+    if (!text || text.trim().length < 50) {
       return NextResponse.json(
-        { error: "Could not extract sufficient text from the uploaded file." },
+        { error: "Could not extract sufficient text from the uploaded file. The PDF may be image-only or corrupted." },
         { status: 400 }
       );
     }

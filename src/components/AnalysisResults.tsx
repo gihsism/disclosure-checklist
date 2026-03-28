@@ -16,6 +16,7 @@ import {
 interface AnalysisResultsProps {
   result: AnalysisResult;
   onUpdateItem: (id: string, updates: Partial<ChecklistItem>) => void;
+  onPageClick?: (page: string) => void;
 }
 
 const statusConfig = {
@@ -72,6 +73,7 @@ type StatusFilter =
 export default function AnalysisResults({
   result,
   onUpdateItem,
+  onPageClick,
 }: AnalysisResultsProps) {
   // Start with all standards expanded
   const allStandardKeys = Object.keys(
@@ -419,7 +421,15 @@ export default function AnalysisResults({
                                 {item.importance}
                               </span>
                               {item.pages && item.pages !== "N/A" && (
-                                <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span
+                                  className={`text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-medium ${onPageClick ? "cursor-pointer hover:bg-blue-200" : ""}`}
+                                  onClick={(e) => {
+                                    if (onPageClick) {
+                                      e.stopPropagation();
+                                      onPageClick(item.pages);
+                                    }
+                                  }}
+                                >
                                   p. {item.pages}
                                 </span>
                               )}
