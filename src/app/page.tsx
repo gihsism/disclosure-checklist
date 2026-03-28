@@ -374,7 +374,7 @@ export default function Home() {
                   <Save className="w-3.5 h-3.5" />
                   Save JSON
                 </button>
-                {pdfUrl && (
+                {pdfUrl ? (
                   <button
                     onClick={() => setShowPdf(!showPdf)}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
@@ -382,6 +382,24 @@ export default function Home() {
                     {showPdf ? <PanelLeftClose className="w-3.5 h-3.5" /> : <PanelLeft className="w-3.5 h-3.5" />}
                     {showPdf ? "Hide PDF" : "Show PDF"}
                   </button>
+                ) : (
+                  <label className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
+                    <PanelLeft className="w-3.5 h-3.5" />
+                    Attach PDF
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) {
+                          setFile(f);
+                          setPdfUrl(URL.createObjectURL(f));
+                          setShowPdf(true);
+                        }
+                      }}
+                    />
+                  </label>
                 )}
               </div>
             </div>
