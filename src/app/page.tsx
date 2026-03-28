@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import FileUpload from "@/components/FileUpload";
 import StandardSelector from "@/components/StandardSelector";
 import AnalysisResults from "@/components/AnalysisResults";
 import { AnalysisResult, ChecklistItem } from "@/types";
 import { getStandardsList } from "@/data/ifrs-checklist";
-import { FileSearch, Loader2 } from "lucide-react";
+import { FileSearch, Loader2, Save, Upload as UploadIcon, History } from "lucide-react";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,8 +19,71 @@ export default function Home() {
   const [progress, setProgress] = useState<string>("");
   const [elapsed, setElapsed] = useState<number>(0);
   const [timerRef, setTimerRef] = useState<NodeJS.Timeout | null>(null);
+  const [hasSavedResult, setHasSavedResult] = useState(false);
+  const loadFileRef = useRef<HTMLInputElement>(null);
 
   const allStandards = getStandardsList().map((s) => s.id);
+
+  // Check if there's a saved result in localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("disclosure-checklist-result");
+      if (saved) setHasSavedResult(true);
+    } catch { /* ignore */ }
+  }, []);
+
+  // Auto-save result to localStorage whenever it changes
+  useEffect(() => {
+    if (result) {
+      try {
+        const data = { ...result, savedAt: new Date().toISOString() };
+        localStorage.setItem("disclosure-checklist-result", JSON.stringify(data));
+        setHasSavedResult(true);
+      } catch { /* ignore */ }
+    }
+  }, [result]);
+
+  const loadSavedResult = () => {
+    try {
+      const saved = localStorage.getItem("disclosure-checklist-result");
+      if (saved) {
+        const data = JSON.parse(saved);
+        setResult(data);
+      }
+    } catch { /* ignore */ }
+  };
+
+  const saveResultToFile = () => {
+    if (!result) return;
+    const data = { ...result, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `disclosure-checklist-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const loadResultFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target?.result as string);
+        if (data.checklist && data.summary) {
+          setResult(data);
+        } else {
+          setError("Invalid results file.");
+        }
+      } catch {
+        setError("Could not parse the results file.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
 
   const handleToggle = (standard: string) => {
     setSelectedStandards((prev) =>
@@ -137,6 +200,35 @@ export default function Home() {
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
         {!result ? (
           <>
+            {/* Load Previous Results */}
+            {(hasSavedResult || true) && (
+              <div className="flex flex-wrap gap-3">
+                {hasSavedResult && (
+                  <button
+                    onClick={loadSavedResult}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    <History className="w-4 h-4" />
+                    Load Last Results
+                  </button>
+                )}
+                <button
+                  onClick={() => loadFileRef.current?.click()}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <UploadIcon className="w-4 h-4" />
+                  Load from File
+                </button>
+                <input
+                  ref={loadFileRef}
+                  type="file"
+                  accept=".json"
+                  onChange={loadResultFromFile}
+                  className="hidden"
+                />
+              </div>
+            )}
+
             {/* Upload Section */}
             <section className="bg-white rounded-2xl border shadow-sm p-6 space-y-6">
               <div>
@@ -256,6 +348,15 @@ export default function Home() {
               <h2 className="text-lg font-semibold text-gray-900">
                 Analysis Results
               </h2>
+              <div className="ml-auto flex items-center gap-2">
+                <button
+                  onClick={saveResultToFile}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  Save JSON
+                </button>
+              </div>
             </div>
             <AnalysisResults
               result={result}
