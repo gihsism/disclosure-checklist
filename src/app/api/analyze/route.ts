@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeFinancialStatements } from "@/lib/analyze";
 import { ifrsRequirements } from "@/data/ifrs-checklist";
 import Anthropic from "@anthropic-ai/sdk";
+import { hashRequest, getCached, setCached } from "@/lib/llm-cache";
 
 export const maxDuration = 300; // 5 min for Vercel
 
@@ -36,28 +37,36 @@ async function extractPdfText(buffer: Buffer): Promise<string> {
 async function extractPdfViaVision(buffer: Buffer): Promise<string> {
   const base64 = buffer.toString("base64");
 
+  const messages: Anthropic.Messages.MessageCreateParams["messages"] = [
+    {
+      role: "user",
+      content: [
+        {
+          type: "document",
+          source: { type: "base64", media_type: "application/pdf", data: base64 },
+        },
+        {
+          type: "text",
+          text: "Extract ALL text from this financial statement PDF. For each page, start with [PAGE X] marker. Preserve all numbers, tables, headings, and structure. Be thorough — include every piece of text visible on each page.",
+        },
+      ],
+    },
+  ];
+
+  // Check cache for vision extraction
+  const hash = hashRequest({ model: "claude-sonnet-4-20250514", messages, max_tokens: 16000 });
+  const cached = getCached(hash);
+  if (cached !== null) return cached;
+
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 16000,
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "document",
-            source: { type: "base64", media_type: "application/pdf", data: base64 },
-          },
-          {
-            type: "text",
-            text: "Extract ALL text from this financial statement PDF. For each page, start with [PAGE X] marker. Preserve all numbers, tables, headings, and structure. Be thorough — include every piece of text visible on each page.",
-          },
-        ],
-      },
-    ],
+    messages,
   });
 
   const content = response.content[0];
   if (content.type === "text") {
+    setCached(hash, content.text);
     return content.text;
   }
   return "";

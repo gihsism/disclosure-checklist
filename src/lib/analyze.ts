@@ -1,7 +1,39 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { DisclosureRequirement, ChecklistItem, StandardApplicability } from "@/types";
+import { hashRequest, getCached, setCached } from "./llm-cache";
 
 const client = new Anthropic();
+
+/**
+ * Cached wrapper around client.messages.create.
+ * Hashes the exact request (model + system + messages + max_tokens).
+ * On cache hit, returns the cached text response without calling the API.
+ */
+async function cachedCreate(params: {
+  model: string;
+  max_tokens: number;
+  system?: string;
+  messages: Array<{ role: "user" | "assistant"; content: string | Anthropic.Messages.ContentBlockParam[] }>;
+}): Promise<string> {
+  const hash = hashRequest({
+    model: params.model,
+    system: params.system,
+    messages: params.messages,
+    max_tokens: params.max_tokens,
+  });
+
+  const cached = getCached(hash);
+  if (cached !== null) {
+    return cached;
+  }
+
+  const response = await client.messages.create(params);
+  const content = response.content[0];
+  if (content.type !== "text") throw new Error("Unexpected response type");
+
+  setCached(hash, content.text);
+  return content.text;
+}
 
 const BATCH_SIZE = 60;
 const MAX_PARALLEL = 10;
@@ -19,14 +51,7 @@ async function assessApplicability(
   text: string,
   standards: string[]
 ): Promise<ApplicabilityResult> {
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 4000,
-    system: "You are an IFRS expert. Respond with ONLY valid JSON, no other text.",
-    messages: [
-      {
-        role: "user",
-        content: `Scan the financial statements below and assess which IFRS/IAS standards are applicable to this entity.
+  const prompt = `Scan the financial statements below and assess which IFRS/IAS standards are applicable to this entity.
 
 For each standard, determine:
 - Whether it is applicable (the entity has these types of transactions/balances/arrangements)
@@ -49,15 +74,16 @@ Return JSON:
   }
 }
 
-Be INCLUSIVE — if unsure, mark as applicable. Only mark not applicable when you are confident.`,
-      },
-    ],
+Be INCLUSIVE — if unsure, mark as applicable. Only mark not applicable when you are confident.`;
+
+  const responseText = await cachedCreate({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 4000,
+    system: "You are an IFRS expert. Respond with ONLY valid JSON, no other text.",
+    messages: [{ role: "user", content: prompt }],
   });
 
-  const content = response.content[0];
-  if (content.type !== "text") throw new Error("Unexpected response type");
-
-  let jsonText = content.text.trim();
+  let jsonText = responseText.trim();
   if (jsonText.startsWith("```")) {
     jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
   }
@@ -132,17 +158,14 @@ async function analyzeBatch(
 ): Promise<AnalysisItem[]> {
   const prompt = buildPrompt(text, requirements);
 
-  const response = await client.messages.create({
+  const responseText = await cachedCreate({
     model: "claude-sonnet-4-20250514",
     max_tokens: 16000,
     system: "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].",
     messages: [{ role: "user", content: prompt }],
   });
 
-  const content = response.content[0];
-  if (content.type !== "text") throw new Error("Unexpected response type");
-
-  let jsonText = content.text.trim();
+  let jsonText = responseText.trim();
   // Strip markdown code blocks
   if (jsonText.startsWith("```")) {
     jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
