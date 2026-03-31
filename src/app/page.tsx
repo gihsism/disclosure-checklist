@@ -10,6 +10,7 @@ import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelL
 import PdfViewer from "@/components/PdfViewer";
 import ReportExport from "@/components/ReportExport";
 import AnalysisHistory, { saveToHistory } from "@/components/AnalysisHistory";
+import { savePdf, loadPdf } from "@/lib/pdf-store";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -41,15 +42,9 @@ export default function Home() {
     } catch { /* ignore */ }
   }, []);
 
-  // Auto-save result to localStorage whenever it changes
+  // Update hasSavedResult when result changes
   useEffect(() => {
-    if (result) {
-      try {
-        const data = { ...result, savedAt: new Date().toISOString() };
-        localStorage.setItem("disclosure-checklist-result", JSON.stringify(data));
-        setHasSavedResult(true);
-      } catch { /* ignore */ }
-    }
+    if (result) setHasSavedResult(true);
   }, [result]);
 
   // Normalize old results to the current schema
@@ -106,10 +101,21 @@ export default function Home() {
     };
   };
 
-  const loadResultAndPromptPdf = (data: AnalysisResult) => {
+  const loadResultWithPdf = async (data: AnalysisResult, pdfId?: string) => {
     setResult(data);
+    // Try to restore PDF from IndexedDB
+    if (pdfId) {
+      const storedPdf = await loadPdf(pdfId);
+      if (storedPdf) {
+        setFile(storedPdf);
+        setPdfUrl(URL.createObjectURL(storedPdf));
+        setShowPdf(true);
+        setShowPdfPrompt(false);
+        return;
+      }
+    }
+    // No stored PDF — prompt user
     if (!pdfUrl) {
-      // Show prompt and auto-open file picker after a short delay
       setShowPdfPrompt(true);
       setTimeout(() => pdfPromptRef.current?.click(), 300);
     }
@@ -122,12 +128,12 @@ export default function Home() {
     setShowPdfPrompt(false);
   };
 
-  const loadSavedResult = () => {
+  const loadSavedResult = async () => {
     try {
       const saved = localStorage.getItem("disclosure-checklist-result");
       if (saved) {
         const data = JSON.parse(saved);
-        loadResultAndPromptPdf(normalizeResult(data));
+        await loadResultWithPdf(normalizeResult(data), data.pdfId);
       }
     } catch { /* ignore */ }
   };
@@ -152,7 +158,7 @@ export default function Home() {
       try {
         const data = JSON.parse(ev.target?.result as string);
         if (data.checklist) {
-          loadResultAndPromptPdf(normalizeResult(data));
+          loadResultWithPdf(normalizeResult(data), data.pdfId);
         } else {
           setError("Invalid results file.");
         }
@@ -214,9 +220,25 @@ export default function Home() {
       if (!response.ok) {
         throw new Error((data as unknown as { error: string }).error || "Analysis failed");
       }
-      setResult(data);
+      // Generate a unique ID for this analysis + PDF pair
+      const pdfId = `pdf-${Date.now()}`;
+
+      // Store PDF in IndexedDB for later retrieval
+      if (file && file.name.endsWith(".pdf")) {
+        await savePdf(pdfId, file);
+      }
+
+      // Save result with pdfId reference
+      const resultWithPdfId = { ...data, pdfId };
+      setResult(resultWithPdfId);
       if (pdfUrl) setShowPdf(true);
-      saveToHistory(file?.name || "Analysis", data);
+      saveToHistory(file?.name || "Analysis", resultWithPdfId, pdfId);
+
+      // Also save to localStorage with pdfId
+      try {
+        localStorage.setItem("disclosure-checklist-result", JSON.stringify({ ...resultWithPdfId, savedAt: new Date().toISOString() }));
+      } catch { /* ignore */ }
+
       setProgress("");
     } catch (err: unknown) {
       const message =
@@ -311,7 +333,7 @@ export default function Home() {
             )}
 
             {/* Analysis History */}
-            <AnalysisHistory onLoad={(r) => loadResultAndPromptPdf(normalizeResult(r as unknown as Record<string, unknown>))} />
+            <AnalysisHistory onLoad={(r, pdfId) => loadResultWithPdf(normalizeResult(r as unknown as Record<string, unknown>), pdfId)} />
 
             {/* Upload Section */}
             <section className="bg-white rounded-2xl border shadow-sm p-6 space-y-6">

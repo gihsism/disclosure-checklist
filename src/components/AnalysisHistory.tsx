@@ -7,15 +7,16 @@ import { Clock, Trash2, Eye } from "lucide-react";
 interface SavedAnalysis {
   id: string;
   fileName: string;
+  pdfId: string; // links to IndexedDB PDF store
   savedAt: string;
   result: AnalysisResult;
 }
 
 interface AnalysisHistoryProps {
-  onLoad: (result: AnalysisResult) => void;
+  onLoad: (result: AnalysisResult, pdfId: string) => void;
 }
 
-export function saveToHistory(fileName: string, result: AnalysisResult) {
+export function saveToHistory(fileName: string, result: AnalysisResult, pdfId: string) {
   try {
     const history: SavedAnalysis[] = JSON.parse(
       localStorage.getItem("disclosure-checklist-history") || "[]"
@@ -23,6 +24,7 @@ export function saveToHistory(fileName: string, result: AnalysisResult) {
     const entry: SavedAnalysis = {
       id: Date.now().toString(),
       fileName,
+      pdfId,
       savedAt: new Date().toISOString(),
       result,
     };
@@ -123,7 +125,7 @@ export default function AnalysisHistory({ onLoad }: AnalysisHistoryProps) {
                 </div>
               </div>
               <button
-                onClick={() => onLoad(entry.result)}
+                onClick={() => onLoad(entry.result, entry.pdfId || entry.id)}
                 className="p-1.5 rounded-md hover:bg-blue-50 text-blue-600"
                 title="Load this analysis"
               >
