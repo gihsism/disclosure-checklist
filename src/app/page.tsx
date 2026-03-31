@@ -22,6 +22,8 @@ export default function Home() {
   );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [showPdfPrompt, setShowPdfPrompt] = useState(false);
+  const pdfPromptRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<string>("");
   const [elapsed, setElapsed] = useState<number>(0);
@@ -104,12 +106,28 @@ export default function Home() {
     };
   };
 
+  const loadResultAndPromptPdf = (data: AnalysisResult) => {
+    setResult(data);
+    if (!pdfUrl) {
+      // Show prompt and auto-open file picker after a short delay
+      setShowPdfPrompt(true);
+      setTimeout(() => pdfPromptRef.current?.click(), 300);
+    }
+  };
+
+  const handlePdfAttach = (f: File) => {
+    setFile(f);
+    setPdfUrl(URL.createObjectURL(f));
+    setShowPdf(true);
+    setShowPdfPrompt(false);
+  };
+
   const loadSavedResult = () => {
     try {
       const saved = localStorage.getItem("disclosure-checklist-result");
       if (saved) {
         const data = JSON.parse(saved);
-        setResult(normalizeResult(data));
+        loadResultAndPromptPdf(normalizeResult(data));
       }
     } catch { /* ignore */ }
   };
@@ -134,7 +152,7 @@ export default function Home() {
       try {
         const data = JSON.parse(ev.target?.result as string);
         if (data.checklist) {
-          setResult(normalizeResult(data));
+          loadResultAndPromptPdf(normalizeResult(data));
         } else {
           setError("Invalid results file.");
         }
@@ -293,7 +311,7 @@ export default function Home() {
             )}
 
             {/* Analysis History */}
-            <AnalysisHistory onLoad={(r) => setResult(normalizeResult(r as unknown as Record<string, unknown>))} />
+            <AnalysisHistory onLoad={(r) => loadResultAndPromptPdf(normalizeResult(r as unknown as Record<string, unknown>))} />
 
             {/* Upload Section */}
             <section className="bg-white rounded-2xl border shadow-sm p-6 space-y-6">
@@ -439,7 +457,7 @@ export default function Home() {
                     {showPdf ? "Hide PDF" : "Show PDF"}
                   </button>
                 ) : (
-                  <label className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
+                  <label className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors cursor-pointer">
                     <PanelLeft className="w-3.5 h-3.5" />
                     Attach PDF
                     <input
@@ -448,17 +466,26 @@ export default function Home() {
                       className="hidden"
                       onChange={(e) => {
                         const f = e.target.files?.[0];
-                        if (f) {
-                          setFile(f);
-                          setPdfUrl(URL.createObjectURL(f));
-                          setShowPdf(true);
-                        }
+                        if (f) handlePdfAttach(f);
                       }}
                     />
                   </label>
                 )}
               </div>
             </div>
+
+            {/* Hidden PDF file input for auto-prompt */}
+            <input
+              ref={pdfPromptRef}
+              type="file"
+              accept=".pdf"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handlePdfAttach(f);
+                e.target.value = "";
+              }}
+            />
 
             {/* Attach PDF prompt when loaded from history */}
             {!pdfUrl && result && (
@@ -469,7 +496,7 @@ export default function Home() {
                     Attach the original PDF for side-by-side view
                   </p>
                   <p className="text-xs text-blue-600">
-                    Click here to select the PDF file — the checklist will show next to the document with page navigation
+                    Select the PDF to view it alongside the checklist with page navigation
                   </p>
                 </div>
                 <span className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg shrink-0">
@@ -481,11 +508,7 @@ export default function Home() {
                   className="hidden"
                   onChange={(e) => {
                     const f = e.target.files?.[0];
-                    if (f) {
-                      setFile(f);
-                      setPdfUrl(URL.createObjectURL(f));
-                      setShowPdf(true);
-                    }
+                    if (f) handlePdfAttach(f);
                   }}
                 />
               </label>
