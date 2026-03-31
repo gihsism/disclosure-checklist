@@ -16,6 +16,7 @@ export default function Home() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [showPdf, setShowPdf] = useState(true);
   const [highlightPage, setHighlightPage] = useState<number | undefined>();
+  const [pageNavCounter, setPageNavCounter] = useState(0);
   const [selectedStandards, setSelectedStandards] = useState<string[]>(
     getStandardsList().map((s) => s.id)
   );
@@ -494,7 +495,7 @@ export default function Home() {
             <div className={`${pdfUrl && showPdf ? "grid grid-cols-2 gap-4" : ""}`}>
               {pdfUrl && showPdf && (
                 <div className="sticky top-20 h-[calc(100vh-120px)]">
-                  <PdfViewer fileUrl={pdfUrl} highlightPage={highlightPage} />
+                  <PdfViewer fileUrl={pdfUrl} highlightPage={highlightPage} navKey={pageNavCounter} />
                 </div>
               )}
               <div>
@@ -504,7 +505,10 @@ export default function Home() {
                   onPageClick={(page) => {
                     if (page && page !== "N/A") {
                       const p = parseInt(page.split(/[-,]/)[0].trim());
-                      if (!isNaN(p)) setHighlightPage(p);
+                      if (!isNaN(p)) {
+                        setHighlightPage(p);
+                        setPageNavCounter((c) => c + 1);
+                      }
                     }
                   }}
                 />
