@@ -49,12 +49,66 @@ export default function Home() {
     }
   }, [result]);
 
+  // Normalize old results to the current schema
+  const normalizeResult = (data: Record<string, unknown>): AnalysisResult => {
+    const checklist = (data.checklist || []) as AnalysisResult["checklist"];
+
+    // Ensure every checklist item has the `pages` field
+    const normalizedChecklist = checklist.map((item) => ({
+      ...item,
+      pages: item.pages || "N/A",
+    }));
+
+    // Build applicability from checklist if not present
+    let applicability = data.applicability as AnalysisResult["applicability"] | undefined;
+    if (!applicability || applicability.length === 0) {
+      const stdMap: Record<string, { name: string; applicable: boolean; count: number }> = {};
+      for (const item of normalizedChecklist) {
+        if (!stdMap[item.standard]) {
+          stdMap[item.standard] = {
+            name: item.standardName,
+            applicable: item.status !== "not_applicable",
+            count: 0,
+          };
+        }
+        stdMap[item.standard].count++;
+        if (item.status !== "not_applicable") {
+          stdMap[item.standard].applicable = true;
+        }
+      }
+      applicability = Object.entries(stdMap).map(([std, info]) => ({
+        standard: std,
+        standardName: info.name,
+        applicable: info.applicable,
+        reason: info.applicable ? "Applicable based on analysis" : "All items marked N/A",
+        requirementCount: info.count,
+      }));
+    }
+
+    // Rebuild summary from checklist
+    const summary = {
+      total: normalizedChecklist.length,
+      present: normalizedChecklist.filter((c) => c.status === "present").length,
+      missing: normalizedChecklist.filter((c) => c.status === "missing").length,
+      partial: normalizedChecklist.filter((c) => c.status === "partial").length,
+      notApplicable: normalizedChecklist.filter((c) => c.status === "not_applicable").length,
+    };
+
+    return {
+      framework: (data.framework as string) || "ifrs",
+      checklist: normalizedChecklist,
+      applicability,
+      summary,
+      recommendations: (data.recommendations || []) as string[],
+    };
+  };
+
   const loadSavedResult = () => {
     try {
       const saved = localStorage.getItem("disclosure-checklist-result");
       if (saved) {
         const data = JSON.parse(saved);
-        setResult(data);
+        setResult(normalizeResult(data));
       }
     } catch { /* ignore */ }
   };
@@ -78,8 +132,8 @@ export default function Home() {
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target?.result as string);
-        if (data.checklist && data.summary) {
-          setResult(data);
+        if (data.checklist) {
+          setResult(normalizeResult(data));
         } else {
           setError("Invalid results file.");
         }
@@ -238,7 +292,7 @@ export default function Home() {
             )}
 
             {/* Analysis History */}
-            <AnalysisHistory onLoad={(r) => setResult(r)} />
+            <AnalysisHistory onLoad={(r) => setResult(normalizeResult(r as unknown as Record<string, unknown>))} />
 
             {/* Upload Section */}
             <section className="bg-white rounded-2xl border shadow-sm p-6 space-y-6">
