@@ -405,6 +405,37 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Attach PDF prompt when loaded from history */}
+            {!pdfUrl && result && (
+              <label className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors">
+                <PanelLeft className="w-5 h-5 text-blue-600 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-blue-800">
+                    Attach the original PDF for side-by-side view
+                  </p>
+                  <p className="text-xs text-blue-600">
+                    Click here to select the PDF file — the checklist will show next to the document with page navigation
+                  </p>
+                </div>
+                <span className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg shrink-0">
+                  Select PDF
+                </span>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) {
+                      setFile(f);
+                      setPdfUrl(URL.createObjectURL(f));
+                      setShowPdf(true);
+                    }
+                  }}
+                />
+              </label>
+            )}
+
             {/* Side-by-side layout */}
             <div className={`${pdfUrl && showPdf ? "grid grid-cols-2 gap-4" : ""}`}>
               {pdfUrl && showPdf && (
