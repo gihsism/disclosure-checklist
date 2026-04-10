@@ -145,6 +145,10 @@ export default function AnalysisResults({
       "Importance",
       "Status",
       "Page(s)",
+      "Approved",
+      "Reviewer",
+      "Review Date",
+      "Review Comment",
       "Notes",
       "Evidence",
     ];
@@ -155,6 +159,10 @@ export default function AnalysisResults({
       item.importance,
       item.status,
       item.pages || "N/A",
+      item.review?.approved ? "Yes" : "No",
+      item.review?.reviewer || "",
+      item.review?.reviewedAt ? new Date(item.review.reviewedAt).toLocaleDateString() : "",
+      `"${(item.review?.comment || "").replace(/"/g, '""')}"`,
       `"${item.notes.replace(/"/g, '""')}"`,
       `"${item.evidence.replace(/"/g, '""')}"`,
     ]);
@@ -175,6 +183,10 @@ export default function AnalysisResults({
           ((summary.present + summary.notApplicable) / summary.total) * 100
         )
       : 0;
+
+  const approvedCount = result.checklist.filter((c) => c.review?.approved).length;
+  const applicableCount = result.checklist.filter((c) => c.status !== "not_applicable").length;
+  const approvalRate = applicableCount > 0 ? Math.round((approvedCount / applicableCount) * 100) : 0;
 
   return (
     <div className="space-y-6">
@@ -224,6 +236,21 @@ export default function AnalysisResults({
                   : "bg-red-500"
             }`}
             style={{ width: `${completionRate}%` }}
+          />
+        </div>
+        {/* Approval progress */}
+        <div className="flex items-center justify-between mt-3">
+          <span className="text-sm font-medium text-gray-700">
+            Reviewer Approval
+          </span>
+          <span className="text-sm font-bold text-gray-900">
+            {approvedCount} / {applicableCount} ({approvalRate}%)
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+          <div
+            className="h-2 rounded-full transition-all duration-500 bg-emerald-500"
+            style={{ width: `${approvalRate}%` }}
           />
         </div>
       </div>
@@ -462,14 +489,20 @@ export default function AnalysisResults({
                             <option value="not_applicable">N/A</option>
                             <option value="unchecked">Unchecked</option>
                           </select>
+                          {/* Approval indicator on collapsed row */}
+                          {item.review?.approved && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-medium shrink-0" title={`Approved by ${item.review.reviewer}`}>
+                              Approved
+                            </span>
+                          )}
                         </button>
 
                         {isItemExpanded && (
-                          <div className="px-11 pb-3 space-y-2">
+                          <div className="px-11 pb-3 space-y-3">
                             {item.notes && (
                               <div>
                                 <p className="text-xs font-semibold text-gray-500 uppercase">
-                                  Notes
+                                  AI Assessment
                                 </p>
                                 <p className="text-sm text-gray-700">
                                   {item.notes}
@@ -502,6 +535,83 @@ export default function AnalysisResults({
                                 rows={2}
                                 placeholder="Add your own notes..."
                               />
+                            </div>
+
+                            {/* Review / Approval Section */}
+                            <div className={`rounded-lg border p-3 ${item.review?.approved ? "bg-emerald-50 border-emerald-200" : "bg-white border-gray-200"}`} onClick={(e) => e.stopPropagation()}>
+                              <p className="text-xs font-semibold text-gray-500 uppercase mb-2">
+                                Reviewer Sign-off
+                              </p>
+                              <div className="flex items-start gap-3">
+                                <div className="flex-1 space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="text"
+                                      value={item.review?.reviewer || ""}
+                                      onChange={(e) =>
+                                        onUpdateItem(item.id, {
+                                          review: {
+                                            approved: item.review?.approved || false,
+                                            reviewer: e.target.value,
+                                            reviewedAt: item.review?.reviewedAt || "",
+                                            comment: item.review?.comment || "",
+                                          },
+                                        })
+                                      }
+                                      className="text-sm border rounded-md px-2 py-1 bg-white flex-1"
+                                      placeholder="Reviewer name"
+                                    />
+                                  </div>
+                                  <textarea
+                                    value={item.review?.comment || ""}
+                                    onChange={(e) =>
+                                      onUpdateItem(item.id, {
+                                        review: {
+                                          approved: item.review?.approved || false,
+                                          reviewer: item.review?.reviewer || "",
+                                          reviewedAt: item.review?.reviewedAt || "",
+                                          comment: e.target.value,
+                                        },
+                                      })
+                                    }
+                                    className="w-full text-sm border rounded-md p-2 bg-white"
+                                    rows={1}
+                                    placeholder="Review comment (optional)"
+                                  />
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    const newApproved = !item.review?.approved;
+                                    onUpdateItem(item.id, {
+                                      review: {
+                                        approved: newApproved,
+                                        reviewer: item.review?.reviewer || "",
+                                        reviewedAt: newApproved ? new Date().toISOString() : "",
+                                        comment: item.review?.comment || "",
+                                      },
+                                    });
+                                  }}
+                                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors shrink-0 ${
+                                    item.review?.approved
+                                      ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 border"
+                                  }`}
+                                >
+                                  {item.review?.approved ? "Approved" : "Approve"}
+                                </button>
+                              </div>
+                              {item.review?.approved && item.review.reviewedAt && (
+                                <p className="text-xs text-emerald-600 mt-2">
+                                  Approved by {item.review.reviewer || "—"} on{" "}
+                                  {new Date(item.review.reviewedAt).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </p>
+                              )}
                             </div>
                           </div>
                         )}

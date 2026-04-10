@@ -8,11 +8,19 @@ export interface DisclosureRequirement {
   importance: "critical" | "important" | "recommended";
 }
 
+export interface ReviewInfo {
+  approved: boolean;
+  reviewer: string;
+  reviewedAt: string;
+  comment: string;
+}
+
 export interface ChecklistItem extends DisclosureRequirement {
   status: "present" | "missing" | "partial" | "not_applicable" | "unchecked";
   notes: string;
   evidence: string;
   pages: string;
+  review?: ReviewInfo;
 }
 
 export interface StandardApplicability {
