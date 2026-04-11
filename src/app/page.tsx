@@ -10,9 +10,14 @@ import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelL
 import PdfViewer from "@/components/PdfViewer";
 import ReportExport from "@/components/ReportExport";
 import AnalysisHistory, { saveToHistory } from "@/components/AnalysisHistory";
+import ScopingResults from "@/components/ScopingResults";
+import { ScopingResult } from "@/types/scoping";
 import { savePdf, loadPdf } from "@/lib/pdf-store";
 
+type AppStep = "upload" | "scoping" | "results";
+
 export default function Home() {
+  const [step, setStep] = useState<AppStep>("upload");
   const [file, setFile] = useState<File | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [showPdf, setShowPdf] = useState(true);
@@ -22,6 +27,8 @@ export default function Home() {
     getStandardsList().map((s) => s.id)
   );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isScoping, setIsScoping] = useState(false);
+  const [scopingResult, setScopingResult] = useState<ScopingResult | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [showPdfPrompt, setShowPdfPrompt] = useState(false);
   const pdfPromptRef = useRef<HTMLInputElement>(null);
@@ -103,6 +110,7 @@ export default function Home() {
 
   const loadResultWithPdf = async (data: AnalysisResult, pdfId?: string) => {
     setResult(data);
+    setStep("results");
     // Try to restore PDF from IndexedDB
     if (pdfId) {
       const storedPdf = await loadPdf(pdfId);
@@ -178,6 +186,48 @@ export default function Home() {
     );
   };
 
+  const handleScope = async () => {
+    if (!file) return;
+    setIsScoping(true);
+    setError(null);
+    setProgress("Running scoping analysis...");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/scope", {
+        method: "POST",
+        body: formData,
+      });
+
+      const text = await response.text();
+      let data: ScopingResult;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Scoping analysis failed — server error.");
+      }
+
+      if (!response.ok) {
+        throw new Error((data as unknown as { error: string }).error || "Scoping failed");
+      }
+
+      setScopingResult(data);
+      // Pre-select applicable standards
+      const applicable = data.applicableStandards.map((s) => s.standard);
+      setSelectedStandards(applicable);
+      setStep("scoping");
+      setProgress("");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Scoping failed";
+      setError(message);
+      setProgress("");
+    } finally {
+      setIsScoping(false);
+    }
+  };
+
   const handleAnalyze = async () => {
     if (!file || selectedStandards.length === 0) return;
 
@@ -229,8 +279,9 @@ export default function Home() {
       }
 
       // Save result with pdfId reference
-      const resultWithPdfId = { ...data, pdfId };
+      const resultWithPdfId = { ...data, pdfId, scoping: scopingResult };
       setResult(resultWithPdfId);
+      setStep("results");
       if (pdfUrl) setShowPdf(true);
       saveToHistory(file?.name || "Analysis", resultWithPdfId, pdfId);
 
@@ -300,8 +351,8 @@ export default function Home() {
         </div>
       </header>
 
-      <main className={`mx-auto px-4 py-8 space-y-6 ${result && pdfUrl && showPdf ? "max-w-[1600px]" : "max-w-6xl"}`}>
-        {!result ? (
+      <main className={`mx-auto px-4 py-8 space-y-6 ${step === "results" && pdfUrl && showPdf ? "max-w-[1600px]" : "max-w-6xl"}`}>
+        {step === "upload" ? (
           <>
             {/* Load Previous Results */}
             {(hasSavedResult || true) && (
@@ -360,13 +411,6 @@ export default function Home() {
                 isAnalyzing={isAnalyzing}
               />
 
-              <StandardSelector
-                selectedStandards={selectedStandards}
-                onToggle={handleToggle}
-                onSelectAll={() => setSelectedStandards(allStandards)}
-                onDeselectAll={() => setSelectedStandards([])}
-              />
-
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
                   {error}
@@ -374,44 +418,28 @@ export default function Home() {
               )}
 
               <button
-                onClick={handleAnalyze}
-                disabled={!file || selectedStandards.length === 0 || isAnalyzing}
+                onClick={handleScope}
+                disabled={!file || isScoping}
                 className={`
                   w-full py-3 px-6 rounded-xl font-semibold text-white
                   transition-all duration-200
                   ${
-                    !file || selectedStandards.length === 0 || isAnalyzing
+                    !file || isScoping
                       ? "bg-gray-300 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 shadow-lg shadow-blue-200"
                   }
                 `}
               >
-                {isAnalyzing ? (
+                {isScoping ? (
                   <span className="flex items-center justify-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Analyzing...
+                    {progress || "Analyzing..."}
                   </span>
                 ) : (
-                  `Analyze Against ${selectedStandards.length} Standards`
+                  "Start Scoping Analysis"
                 )}
               </button>
 
-              {isAnalyzing && (
-                <div className="text-center space-y-2">
-                  <p className="text-sm text-blue-600 animate-pulse">
-                    {progress}
-                  </p>
-                  <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
-                    <span>
-                      Elapsed: {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
-                    </span>
-                    <span className="text-gray-300">|</span>
-                    <span>
-                      Estimated: ~{Math.max(1, Math.ceil(selectedStandards.length * 0.15))}-{Math.ceil(selectedStandards.length * 0.25)} min
-                    </span>
-                  </div>
-                </div>
-              )}
             </section>
 
             {/* How it works */}
@@ -446,6 +474,53 @@ export default function Home() {
               ))}
             </section>
           </>
+        ) : step === "scoping" && scopingResult ? (
+          <>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => { setStep("upload"); setScopingResult(null); }}
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                &larr; Back to Upload
+              </button>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Scoping Analysis
+              </h2>
+            </div>
+
+            <ScopingResults
+              scoping={scopingResult}
+              selectedStandards={selectedStandards}
+              onToggleStandard={handleToggle}
+              onSelectApplicable={() => {
+                setSelectedStandards(scopingResult.applicableStandards.map((s) => s.standard));
+              }}
+              onProceed={handleAnalyze}
+            />
+
+            {isAnalyzing && (
+              <div className="text-center space-y-2">
+                <p className="text-sm text-blue-600 animate-pulse">
+                  {progress}
+                </p>
+                <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                  <span>
+                    Elapsed: {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")}
+                  </span>
+                  <span className="text-gray-300">|</span>
+                  <span>
+                    Estimated: ~{Math.max(1, Math.ceil(selectedStandards.length * 0.15))}-{Math.ceil(selectedStandards.length * 0.25)} min
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+          </>
         ) : (
           <>
             <div className="flex items-center gap-4">
@@ -453,6 +528,8 @@ export default function Home() {
                 onClick={() => {
                   setResult(null);
                   setFile(null);
+                  setScopingResult(null);
+                  setStep("upload");
                 }}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
               >
@@ -462,7 +539,7 @@ export default function Home() {
                 Analysis Results
               </h2>
               <div className="ml-auto flex items-center gap-2">
-                <ReportExport result={result} />
+                {result && <ReportExport result={result} />}
                 <button
                   onClick={saveResultToFile}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
@@ -544,7 +621,7 @@ export default function Home() {
                 </div>
               )}
               <div>
-                <AnalysisResults
+                {result && <AnalysisResults
                   result={result}
                   onUpdateItem={handleUpdateItem}
                   onPageClick={(page) => {
@@ -556,7 +633,7 @@ export default function Home() {
                       }
                     }
                   }}
-                />
+                />}
               </div>
             </div>
           </>
