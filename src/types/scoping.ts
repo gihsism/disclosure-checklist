@@ -1,4 +1,12 @@
+export interface ScopingReview {
+  approved: boolean;
+  reviewer: string;
+  reviewedAt: string;
+  comment: string;
+}
+
 export interface ScopingResult {
+  review?: ScopingReview;
   entity: {
     name: string;
     type: string; // e.g. "Listed public company", "Private company", "Financial institution"

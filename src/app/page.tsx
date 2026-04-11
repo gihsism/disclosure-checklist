@@ -496,6 +496,9 @@ export default function Home() {
                 setSelectedStandards(scopingResult.applicableStandards.map((s) => s.standard));
               }}
               onProceed={handleAnalyze}
+              onUpdateReview={(review) => {
+                setScopingResult({ ...scopingResult, review });
+              }}
             />
 
             {isAnalyzing && (

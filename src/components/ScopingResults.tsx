@@ -1,6 +1,6 @@
 "use client";
 
-import { ScopingResult } from "@/types/scoping";
+import { ScopingResult, ScopingReview } from "@/types/scoping";
 import {
   Building2,
   Globe,
@@ -20,6 +20,7 @@ interface ScopingResultsProps {
   onToggleStandard: (standard: string) => void;
   onSelectApplicable: () => void;
   onProceed: () => void;
+  onUpdateReview: (review: ScopingReview) => void;
 }
 
 export default function ScopingResults({
@@ -28,7 +29,9 @@ export default function ScopingResults({
   onToggleStandard,
   onSelectApplicable,
   onProceed,
+  onUpdateReview,
 }: ScopingResultsProps) {
+  const review = scoping.review;
   const { entity, keyFigures, significantAreas, riskAreas, applicableStandards, notApplicableStandards, summary } = scoping;
 
   return (
@@ -197,6 +200,78 @@ export default function ScopingResults({
               ))}
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Scoping Approval */}
+      <div className={`rounded-xl border p-5 ${review?.approved ? "bg-emerald-50 border-emerald-200" : "bg-white"}`}>
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          Scoping Sign-off
+        </h3>
+        <p className="text-xs text-gray-500 mb-3">
+          Review the scoping analysis above — entity profile, key figures, significant areas, risk areas, and standards selection. Approve when satisfied.
+        </p>
+        <div className="flex items-start gap-3">
+          <div className="flex-1 space-y-2">
+            <input
+              type="text"
+              value={review?.reviewer || ""}
+              onChange={(e) =>
+                onUpdateReview({
+                  approved: review?.approved || false,
+                  reviewer: e.target.value,
+                  reviewedAt: review?.reviewedAt || "",
+                  comment: review?.comment || "",
+                })
+              }
+              className="w-full text-sm border rounded-md px-3 py-1.5 bg-white"
+              placeholder="Reviewer name"
+            />
+            <textarea
+              value={review?.comment || ""}
+              onChange={(e) =>
+                onUpdateReview({
+                  approved: review?.approved || false,
+                  reviewer: review?.reviewer || "",
+                  reviewedAt: review?.reviewedAt || "",
+                  comment: e.target.value,
+                })
+              }
+              className="w-full text-sm border rounded-md p-2 bg-white"
+              rows={2}
+              placeholder="Review comments on scoping (optional)..."
+            />
+          </div>
+          <button
+            onClick={() => {
+              const newApproved = !review?.approved;
+              onUpdateReview({
+                approved: newApproved,
+                reviewer: review?.reviewer || "",
+                reviewedAt: newApproved ? new Date().toISOString() : "",
+                comment: review?.comment || "",
+              });
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors shrink-0 ${
+              review?.approved
+                ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border"
+            }`}
+          >
+            {review?.approved ? "Approved" : "Approve Scoping"}
+          </button>
+        </div>
+        {review?.approved && review.reviewedAt && (
+          <p className="text-xs text-emerald-600 mt-2">
+            Scoping approved by {review.reviewer || "—"} on{" "}
+            {new Date(review.reviewedAt).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
         )}
       </div>
 
