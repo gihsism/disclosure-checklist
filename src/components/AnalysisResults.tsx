@@ -16,7 +16,7 @@ import {
 interface AnalysisResultsProps {
   result: AnalysisResult;
   onUpdateItem: (id: string, updates: Partial<ChecklistItem>) => void;
-  onPageClick?: (page: string) => void;
+  onPageClick?: (page: string, evidence?: string) => void;
 }
 
 const statusConfig = {
@@ -433,9 +433,9 @@ export default function AnalysisResults({
                         <button
                           onClick={() => {
                             toggleItem(item.id);
-                            // Navigate PDF to this item's page
+                            // Navigate PDF to this item's page and highlight evidence
                             if (onPageClick && item.pages && item.pages !== "N/A") {
-                              onPageClick(item.pages);
+                              onPageClick(item.pages, item.evidence);
                             }
                           }}
                           className="w-full flex items-start gap-3 p-3 text-left hover:bg-black/5 transition-colors"
@@ -459,7 +459,7 @@ export default function AnalysisResults({
                                   onClick={(e) => {
                                     if (onPageClick) {
                                       e.stopPropagation();
-                                      onPageClick(item.pages);
+                                      onPageClick(item.pages, item.evidence);
                                     }
                                   }}
                                 >
