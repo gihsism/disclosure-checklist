@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import FileUpload from "@/components/FileUpload";
-import StandardSelector from "@/components/StandardSelector";
 import AnalysisResults from "@/components/AnalysisResults";
 import { AnalysisResult, ChecklistItem } from "@/types";
 import { getStandardsList } from "@/data/ifrs-checklist";
-import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelLeft, History } from "lucide-react";
+import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelLeft } from "lucide-react";
 import PdfViewer from "@/components/PdfViewer";
 import ReportExport from "@/components/ReportExport";
-import AnalysisHistory, { saveToHistory } from "@/components/AnalysisHistory";
+import AnalysisHistory from "@/components/AnalysisHistory";
 import ScopingResults from "@/components/ScopingResults";
 import { ScopingResult } from "@/types/scoping";
-import { savePdf, loadPdf } from "@/lib/pdf-store";
+import {
+  saveAnalysis,
+  loadAnalysis,
+  updateAnalysisResult,
+  pdfRecordToFile,
+} from "@/lib/analysis-store";
 
 type AppStep = "upload" | "scoping" | "results";
 
@@ -31,29 +35,14 @@ export default function Home() {
   const [isScoping, setIsScoping] = useState(false);
   const [scopingResult, setScopingResult] = useState<ScopingResult | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [showPdfPrompt, setShowPdfPrompt] = useState(false);
-  const pdfPromptRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<string>("");
   const [elapsed, setElapsed] = useState<number>(0);
   const [timerRef, setTimerRef] = useState<NodeJS.Timeout | null>(null);
-  const [hasSavedResult, setHasSavedResult] = useState(false);
+  const [currentAnalysisId, setCurrentAnalysisId] = useState<string | null>(null);
+  const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
   const loadFileRef = useRef<HTMLInputElement>(null);
 
-  const allStandards = getStandardsList().map((s) => s.id);
-
-  // Check if there's a saved result in localStorage
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("disclosure-checklist-result");
-      if (saved) setHasSavedResult(true);
-    } catch { /* ignore */ }
-  }, []);
-
-  // Update hasSavedResult when result changes
-  useEffect(() => {
-    if (result) setHasSavedResult(true);
-  }, [result]);
 
   // Normalize old results to the current schema
   const normalizeResult = (data: Record<string, unknown>): AnalysisResult => {
@@ -109,24 +98,17 @@ export default function Home() {
     };
   };
 
-  const loadResultWithPdf = async (data: AnalysisResult, pdfId?: string) => {
-    setResult(data);
+  const loadAnalysisById = async (id: string) => {
+    const record = await loadAnalysis(id);
+    if (!record) return;
+    setCurrentAnalysisId(record.id);
+    setResult(normalizeResult(record.result as unknown as Record<string, unknown>));
     setStep("results");
-    // Try to restore PDF from IndexedDB
-    if (pdfId) {
-      const storedPdf = await loadPdf(pdfId);
-      if (storedPdf) {
-        setFile(storedPdf);
-        setPdfUrl(URL.createObjectURL(storedPdf));
-        setShowPdf(true);
-        setShowPdfPrompt(false);
-        return;
-      }
-    }
-    // No stored PDF — prompt user
-    if (!pdfUrl) {
-      setShowPdfPrompt(true);
-      setTimeout(() => pdfPromptRef.current?.click(), 300);
+    if (record.pdf) {
+      const f = pdfRecordToFile(record.pdf);
+      setFile(f);
+      setPdfUrl(URL.createObjectURL(f));
+      setShowPdf(true);
     }
   };
 
@@ -134,17 +116,6 @@ export default function Home() {
     setFile(f);
     setPdfUrl(URL.createObjectURL(f));
     setShowPdf(true);
-    setShowPdfPrompt(false);
-  };
-
-  const loadSavedResult = async () => {
-    try {
-      const saved = localStorage.getItem("disclosure-checklist-result");
-      if (saved) {
-        const data = JSON.parse(saved);
-        await loadResultWithPdf(normalizeResult(data), data.pdfId);
-      }
-    } catch { /* ignore */ }
   };
 
   const saveResultToFile = () => {
@@ -167,7 +138,9 @@ export default function Home() {
       try {
         const data = JSON.parse(ev.target?.result as string);
         if (data.checklist) {
-          loadResultWithPdf(normalizeResult(data), data.pdfId);
+          setCurrentAnalysisId(null);
+          setResult(normalizeResult(data));
+          setStep("results");
         } else {
           setError("Invalid results file.");
         }
@@ -271,25 +244,23 @@ export default function Home() {
       if (!response.ok) {
         throw new Error((data as unknown as { error: string }).error || "Analysis failed");
       }
-      // Generate a unique ID for this analysis + PDF pair
-      const pdfId = `pdf-${Date.now()}`;
-
-      // Store PDF in IndexedDB for later retrieval
-      if (file && file.name.endsWith(".pdf")) {
-        await savePdf(pdfId, file);
-      }
-
-      // Save result with pdfId reference
-      const resultWithPdfId = { ...data, pdfId, scoping: scopingResult };
-      setResult(resultWithPdfId);
+      const resultToSave = { ...data, scoping: scopingResult };
+      setResult(resultToSave);
       setStep("results");
       if (pdfUrl) setShowPdf(true);
-      saveToHistory(file?.name || "Analysis", resultWithPdfId, pdfId);
 
-      // Also save to localStorage with pdfId
       try {
-        localStorage.setItem("disclosure-checklist-result", JSON.stringify({ ...resultWithPdfId, savedAt: new Date().toISOString() }));
-      } catch { /* ignore */ }
+        const id = await saveAnalysis({
+          fileName: file?.name || "Analysis",
+          result: resultToSave,
+          file: file ?? undefined,
+        });
+        setCurrentAnalysisId(id);
+        setHistoryRefreshKey((k) => k + 1);
+        console.log(`[analysis-store] saved ${id} with${file ? "" : "out"} PDF`);
+      } catch (e) {
+        console.error("[analysis-store] save failed:", e);
+      }
 
       setProgress("");
     } catch (err: unknown) {
@@ -306,7 +277,6 @@ export default function Home() {
 
   const handleUpdateItem = useCallback(
     (id: string, updates: Partial<ChecklistItem>) => {
-      if (!result) return;
       setResult((prev) => {
         if (!prev) return prev;
         const newChecklist = prev.checklist.map((item) =>
@@ -321,10 +291,16 @@ export default function Home() {
             (c) => c.status === "not_applicable"
           ).length,
         };
-        return { ...prev, checklist: newChecklist, summary };
+        const next = { ...prev, checklist: newChecklist, summary };
+        if (currentAnalysisId) {
+          updateAnalysisResult(currentAnalysisId, next).then(() =>
+            setHistoryRefreshKey((k) => k + 1)
+          );
+        }
+        return next;
       });
     },
-    [result]
+    [currentAnalysisId]
   );
 
   return (
@@ -355,37 +331,24 @@ export default function Home() {
       <main className={`mx-auto px-4 py-8 space-y-6 ${step === "results" && pdfUrl && showPdf ? "max-w-[1600px]" : "max-w-6xl"}`}>
         {step === "upload" ? (
           <>
-            {/* Load Previous Results */}
-            {(hasSavedResult || true) && (
-              <div className="flex flex-wrap gap-3">
-                {hasSavedResult && (
-                  <button
-                    onClick={loadSavedResult}
-                    className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    <History className="w-4 h-4" />
-                    Load Last Results
-                  </button>
-                )}
-                <button
-                  onClick={() => loadFileRef.current?.click()}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <UploadIcon className="w-4 h-4" />
-                  Load from File
-                </button>
-                <input
-                  ref={loadFileRef}
-                  type="file"
-                  accept=".json"
-                  onChange={loadResultFromFile}
-                  className="hidden"
-                />
-              </div>
-            )}
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => loadFileRef.current?.click()}
+                className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <UploadIcon className="w-4 h-4" />
+                Load from File
+              </button>
+              <input
+                ref={loadFileRef}
+                type="file"
+                accept=".json"
+                onChange={loadResultFromFile}
+                className="hidden"
+              />
+            </div>
 
-            {/* Analysis History */}
-            <AnalysisHistory onLoad={(r, pdfId) => loadResultWithPdf(normalizeResult(r as unknown as Record<string, unknown>), pdfId)} />
+            <AnalysisHistory onLoad={loadAnalysisById} refreshKey={historyRefreshKey} />
 
             {/* Upload Section */}
             <section className="bg-white rounded-2xl border shadow-sm p-6 space-y-6">
@@ -576,19 +539,6 @@ export default function Home() {
                 )}
               </div>
             </div>
-
-            {/* Hidden PDF file input for auto-prompt */}
-            <input
-              ref={pdfPromptRef}
-              type="file"
-              accept=".pdf"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handlePdfAttach(f);
-                e.target.value = "";
-              }}
-            />
 
             {/* Attach PDF prompt when loaded from history */}
             {!pdfUrl && result && (

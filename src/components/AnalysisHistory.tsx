@@ -1,71 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { AnalysisResult } from "@/types";
-import { Clock, Trash2, Eye } from "lucide-react";
-
-interface SavedAnalysis {
-  id: string;
-  fileName: string;
-  pdfId: string; // links to IndexedDB PDF store
-  savedAt: string;
-  result: AnalysisResult;
-}
+import { useState, useEffect, useCallback } from "react";
+import { Clock, Trash2, Eye, FileX } from "lucide-react";
+import {
+  listAnalyses,
+  deleteAnalysis,
+  clearAnalyses,
+  AnalysisSummary,
+} from "@/lib/analysis-store";
 
 interface AnalysisHistoryProps {
-  onLoad: (result: AnalysisResult, pdfId: string) => void;
+  onLoad: (id: string) => void;
+  refreshKey?: number;
 }
 
-export function saveToHistory(fileName: string, result: AnalysisResult, pdfId: string) {
-  try {
-    const history: SavedAnalysis[] = JSON.parse(
-      localStorage.getItem("disclosure-checklist-history") || "[]"
-    );
-    const entry: SavedAnalysis = {
-      id: Date.now().toString(),
-      fileName,
-      pdfId,
-      savedAt: new Date().toISOString(),
-      result,
-    };
-    // Keep last 20
-    history.unshift(entry);
-    if (history.length > 20) history.pop();
-    localStorage.setItem(
-      "disclosure-checklist-history",
-      JSON.stringify(history)
-    );
-  } catch {
-    /* localStorage full or unavailable */
-  }
-}
+export default function AnalysisHistory({ onLoad, refreshKey }: AnalysisHistoryProps) {
+  const [history, setHistory] = useState<AnalysisSummary[]>([]);
 
-export default function AnalysisHistory({ onLoad }: AnalysisHistoryProps) {
-  const [history, setHistory] = useState<SavedAnalysis[]>([]);
-
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     try {
-      const saved = JSON.parse(
-        localStorage.getItem("disclosure-checklist-history") || "[]"
-      );
-      setHistory(saved);
+      setHistory(await listAnalyses());
     } catch {
       setHistory([]);
     }
   }, []);
 
-  const deleteEntry = (id: string) => {
-    const updated = history.filter((h) => h.id !== id);
-    setHistory(updated);
-    localStorage.setItem(
-      "disclosure-checklist-history",
-      JSON.stringify(updated)
-    );
+  useEffect(() => {
+    refresh();
+  }, [refresh, refreshKey]);
+
+  const handleDelete = async (id: string) => {
+    await deleteAnalysis(id);
+    refresh();
   };
 
-  const clearAll = () => {
-    setHistory([]);
-    localStorage.removeItem("disclosure-checklist-history");
+  const handleClearAll = async () => {
+    await clearAnalyses();
+    refresh();
   };
 
   if (history.length === 0) return null;
@@ -78,7 +49,7 @@ export default function AnalysisHistory({ onLoad }: AnalysisHistoryProps) {
           Analysis History
         </h3>
         <button
-          onClick={clearAll}
+          onClick={handleClearAll}
           className="text-xs text-red-500 hover:text-red-700"
         >
           Clear All
@@ -91,6 +62,14 @@ export default function AnalysisHistory({ onLoad }: AnalysisHistoryProps) {
             s.total > 0
               ? Math.round(((s.present + s.notApplicable) / s.total) * 100)
               : 0;
+          const applicable = entry.result.checklist.filter(
+            (c) => c.status !== "not_applicable"
+          ).length;
+          const reviewed = entry.result.checklist.filter(
+            (c) => c.review?.approved
+          ).length;
+          const reviewRate =
+            applicable > 0 ? Math.round((reviewed / applicable) * 100) : 0;
           return (
             <div
               key={entry.id}
@@ -122,17 +101,38 @@ export default function AnalysisHistory({ onLoad }: AnalysisHistoryProps) {
                   >
                     {rate}%
                   </span>
+                  <span
+                    className={`font-medium ${
+                      reviewRate === 100
+                        ? "text-emerald-600"
+                        : reviewRate > 0
+                          ? "text-emerald-500"
+                          : "text-gray-400"
+                    }`}
+                    title="Reviewer approvals"
+                  >
+                    {reviewed}/{applicable} reviewed
+                  </span>
                 </div>
               </div>
+              {!entry.hasPdf && (
+                <span
+                  className="flex items-center gap-1 text-[10px] text-gray-400"
+                  title="No PDF saved with this entry — attach the file manually"
+                >
+                  <FileX className="w-3 h-3" />
+                  no PDF
+                </span>
+              )}
               <button
-                onClick={() => onLoad(entry.result, entry.pdfId || entry.id)}
+                onClick={() => onLoad(entry.id)}
                 className="p-1.5 rounded-md hover:bg-blue-50 text-blue-600"
                 title="Load this analysis"
               >
                 <Eye className="w-4 h-4" />
               </button>
               <button
-                onClick={() => deleteEntry(entry.id)}
+                onClick={() => handleDelete(entry.id)}
                 className="p-1.5 rounded-md hover:bg-red-50 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                 title="Delete"
               >
