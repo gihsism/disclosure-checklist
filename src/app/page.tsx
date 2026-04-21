@@ -5,7 +5,7 @@ import FileUpload from "@/components/FileUpload";
 import AnalysisResults from "@/components/AnalysisResults";
 import { AnalysisResult, ChecklistItem } from "@/types";
 import { getStandardsList } from "@/data/ifrs-checklist";
-import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelLeft } from "lucide-react";
+import { FileSearch, Loader2, Save, Upload as UploadIcon, PanelLeftClose, PanelLeft, Archive, ArchiveRestore } from "lucide-react";
 import PdfViewer from "@/components/PdfViewer";
 import ReportExport from "@/components/ReportExport";
 import AnalysisHistory from "@/components/AnalysisHistory";
@@ -16,6 +16,9 @@ import {
   loadAnalysis,
   updateAnalysisResult,
   pdfRecordToFile,
+  exportAllAsZip,
+  importFromZip,
+  listAnalyses,
 } from "@/lib/analysis-store";
 
 type AppStep = "upload" | "scoping" | "results";
@@ -42,6 +45,9 @@ export default function Home() {
   const [currentAnalysisId, setCurrentAnalysisId] = useState<string | null>(null);
   const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
   const loadFileRef = useRef<HTMLInputElement>(null);
+  const zipImportRef = useRef<HTMLInputElement>(null);
+  const [zipBusy, setZipBusy] = useState(false);
+  const [zipMessage, setZipMessage] = useState<string | null>(null);
 
 
   // Normalize old results to the current schema
@@ -128,6 +134,51 @@ export default function Home() {
     a.download = `disclosure-checklist-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const downloadHistoryZip = async () => {
+    setZipMessage(null);
+    setZipBusy(true);
+    try {
+      const summaries = await listAnalyses();
+      if (summaries.length === 0) {
+        setZipMessage("No analyses in history yet.");
+        return;
+      }
+      const blob = await exportAllAsZip();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `disclosure-checklist-history-${new Date().toISOString().slice(0, 10)}.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setZipMessage(`Exported ${summaries.length} analyses.`);
+    } catch (err) {
+      setZipMessage(
+        err instanceof Error ? `Export failed: ${err.message}` : "Export failed."
+      );
+    } finally {
+      setZipBusy(false);
+    }
+  };
+
+  const importHistoryZip = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    if (!f) return;
+    setZipMessage(null);
+    setZipBusy(true);
+    try {
+      const { imported, skipped } = await importFromZip(f);
+      setZipMessage(`Imported ${imported} analyses${skipped ? ` (${skipped} skipped — already present)` : ""}.`);
+      setHistoryRefreshKey((k) => k + 1);
+    } catch (err) {
+      setZipMessage(
+        err instanceof Error ? `Import failed: ${err.message}` : "Import failed."
+      );
+    } finally {
+      setZipBusy(false);
+    }
   };
 
   const loadResultFromFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -331,7 +382,7 @@ export default function Home() {
       <main className={`mx-auto px-4 py-8 space-y-6 ${step === "results" && pdfUrl && showPdf ? "max-w-[1600px]" : "max-w-6xl"}`}>
         {step === "upload" ? (
           <>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={() => loadFileRef.current?.click()}
                 className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
@@ -339,11 +390,37 @@ export default function Home() {
                 <UploadIcon className="w-4 h-4" />
                 Load from File
               </button>
+              <button
+                onClick={downloadHistoryZip}
+                disabled={zipBusy}
+                className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <Archive className="w-4 h-4" />
+                Download history (.zip)
+              </button>
+              <button
+                onClick={() => zipImportRef.current?.click()}
+                disabled={zipBusy}
+                className="flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <ArchiveRestore className="w-4 h-4" />
+                Restore from .zip
+              </button>
+              {zipMessage && (
+                <span className="text-xs text-gray-600">{zipMessage}</span>
+              )}
               <input
                 ref={loadFileRef}
                 type="file"
                 accept=".json"
                 onChange={loadResultFromFile}
+                className="hidden"
+              />
+              <input
+                ref={zipImportRef}
+                type="file"
+                accept=".zip,application/zip,application/x-zip-compressed"
+                onChange={importHistoryZip}
                 className="hidden"
               />
             </div>

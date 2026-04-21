@@ -151,3 +151,138 @@ export async function clearAnalyses(): Promise<void> {
 export function pdfRecordToFile(pdf: NonNullable<AnalysisRecord["pdf"]>): File {
   return new File([pdf.data], pdf.name, { type: pdf.type });
 }
+
+const MANIFEST_NAME = "manifest.json";
+
+export async function exportAllAsZip(): Promise<Blob> {
+  const { default: JSZip } = await import("jszip");
+  const db = await openDB();
+  const tx = db.transaction(STORE_NAME, "readonly");
+  const records = await new Promise<AnalysisRecord[]>((resolve, reject) => {
+    const req = tx.objectStore(STORE_NAME).getAll();
+    req.onsuccess = () => resolve((req.result as AnalysisRecord[]) || []);
+    req.onerror = () => reject(req.error);
+  });
+
+  const zip = new JSZip();
+  const manifest: Array<{
+    id: string;
+    fileName: string;
+    savedAt: string;
+    folder: string;
+    pdfFile?: string;
+  }> = [];
+
+  for (const r of records) {
+    const safeId = r.id.replace(/[^a-zA-Z0-9_-]/g, "_");
+    const folderName = `${r.savedAt.slice(0, 10)}_${safeId}`;
+    const folder = zip.folder(folderName);
+    if (!folder) continue;
+    folder.file("result.json", JSON.stringify(r.result, null, 2));
+    folder.file(
+      "meta.json",
+      JSON.stringify(
+        {
+          id: r.id,
+          fileName: r.fileName,
+          savedAt: r.savedAt,
+          pdf: r.pdf
+            ? { name: r.pdf.name, type: r.pdf.type, size: r.pdf.data.byteLength }
+            : null,
+        },
+        null,
+        2
+      )
+    );
+    let pdfFile: string | undefined;
+    if (r.pdf) {
+      pdfFile = r.pdf.name || "document.pdf";
+      folder.file(pdfFile, r.pdf.data);
+    }
+    manifest.push({
+      id: r.id,
+      fileName: r.fileName,
+      savedAt: r.savedAt,
+      folder: folderName,
+      pdfFile,
+    });
+  }
+
+  zip.file(
+    MANIFEST_NAME,
+    JSON.stringify(
+      { version: 1, exportedAt: new Date().toISOString(), entries: manifest },
+      null,
+      2
+    )
+  );
+
+  return zip.generateAsync({ type: "blob" });
+}
+
+export async function importFromZip(file: File): Promise<{
+  imported: number;
+  skipped: number;
+}> {
+  const { default: JSZip } = await import("jszip");
+  const zip = await JSZip.loadAsync(file);
+  const manifestFile = zip.file(MANIFEST_NAME);
+  if (!manifestFile) {
+    throw new Error(`Zip missing ${MANIFEST_NAME} — not a history export`);
+  }
+  const manifest = JSON.parse(await manifestFile.async("string")) as {
+    version: number;
+    entries: Array<{
+      id: string;
+      fileName: string;
+      savedAt: string;
+      folder: string;
+      pdfFile?: string;
+    }>;
+  };
+
+  const existing = new Set((await listAnalyses()).map((a) => a.id));
+  const db = await openDB();
+  let imported = 0;
+  let skipped = 0;
+
+  for (const entry of manifest.entries) {
+    if (existing.has(entry.id)) {
+      skipped++;
+      continue;
+    }
+    const resultFile = zip.file(`${entry.folder}/result.json`);
+    if (!resultFile) {
+      skipped++;
+      continue;
+    }
+    const result = JSON.parse(await resultFile.async("string")) as AnalysisResult;
+    const record: AnalysisRecord = {
+      id: entry.id,
+      fileName: entry.fileName,
+      savedAt: entry.savedAt,
+      result,
+    };
+    if (entry.pdfFile) {
+      const pdfEntry = zip.file(`${entry.folder}/${entry.pdfFile}`);
+      if (pdfEntry) {
+        const data = await pdfEntry.async("arraybuffer");
+        record.pdf = {
+          data,
+          name: entry.pdfFile,
+          type: "application/pdf",
+        };
+      }
+    }
+
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(record);
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+    imported++;
+  }
+
+  return { imported, skipped };
+}
