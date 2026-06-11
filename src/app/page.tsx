@@ -12,18 +12,20 @@ import AnalysisHistory from "@/components/AnalysisHistory";
 import ScopingResults from "@/components/ScopingResults";
 import { ScopingResult } from "@/types/scoping";
 import {
-  saveAnalysis,
-  loadAnalysis,
-  updateAnalysisResult,
   pdfRecordToFile,
   exportAllAsZip,
   importFromZip,
-  listAnalyses,
+  listAnalyses as listLocalAnalyses,
 } from "@/lib/analysis-store";
+import { getStorage } from "@/lib/storage";
+import { useSession } from "next-auth/react";
+import AuthButton from "@/components/AuthButton";
 
 type AppStep = "upload" | "scoping" | "results";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const storage = getStorage(!!session?.user);
   const [step, setStep] = useState<AppStep>("upload");
   const [file, setFile] = useState<File | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -105,7 +107,7 @@ export default function Home() {
   };
 
   const loadAnalysisById = async (id: string) => {
-    const record = await loadAnalysis(id);
+    const record = await storage.load(id);
     if (!record) return;
     setCurrentAnalysisId(record.id);
     setResult(normalizeResult(record.result as unknown as Record<string, unknown>));
@@ -140,7 +142,7 @@ export default function Home() {
     setZipMessage(null);
     setZipBusy(true);
     try {
-      const summaries = await listAnalyses();
+      const summaries = await listLocalAnalyses();
       if (summaries.length === 0) {
         setZipMessage("No analyses in history yet.");
         return;
@@ -301,7 +303,7 @@ export default function Home() {
       if (pdfUrl) setShowPdf(true);
 
       try {
-        const id = await saveAnalysis({
+        const id = await storage.save({
           fileName: file?.name || "Analysis",
           result: resultToSave,
           file: file ?? undefined,
@@ -344,14 +346,14 @@ export default function Home() {
         };
         const next = { ...prev, checklist: newChecklist, summary };
         if (currentAnalysisId) {
-          updateAnalysisResult(currentAnalysisId, next).then(() =>
-            setHistoryRefreshKey((k) => k + 1)
-          );
+          storage
+            .update(currentAnalysisId, next)
+            .then(() => setHistoryRefreshKey((k) => k + 1));
         }
         return next;
       });
     },
-    [currentAnalysisId]
+    [currentAnalysisId, storage]
   );
 
   return (
@@ -375,6 +377,7 @@ export default function Home() {
             <span className="text-xs bg-gray-100 text-gray-400 px-2 py-1 rounded-full">
               US GAAP (coming soon)
             </span>
+            <AuthButton />
           </div>
         </div>
       </header>
