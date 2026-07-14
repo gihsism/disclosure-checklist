@@ -54,13 +54,14 @@ async function extractPdfViaVision(buffer: Buffer): Promise<string> {
   ];
 
   // Check cache for vision extraction
-  const hash = hashRequest({ model: "claude-sonnet-4-20250514", messages, max_tokens: 16000 });
+  const hash = hashRequest({ model: "claude-sonnet-5", messages, max_tokens: 16000 });
   const cached = getCached(hash);
   if (cached !== null) return cached;
 
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-sonnet-5",
     max_tokens: 16000,
+    thinking: { type: "disabled" },
     messages,
   });
 

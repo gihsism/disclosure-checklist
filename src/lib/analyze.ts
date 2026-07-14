@@ -27,7 +27,10 @@ async function cachedCreate(params: {
     return cached;
   }
 
-  const response = await client.messages.create(params);
+  const response = await client.messages.create({
+    ...params,
+    thinking: { type: "disabled" },
+  });
   const content = response.content[0];
   if (content.type !== "text") throw new Error("Unexpected response type");
 
@@ -77,7 +80,7 @@ Return JSON:
 Be INCLUSIVE — if unsure, mark as applicable. Only mark not applicable when you are confident.`;
 
   const responseText = await cachedCreate({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-opus-4-8",
     max_tokens: 4000,
     system: "You are an IFRS expert. Respond with ONLY valid JSON, no other text.",
     messages: [{ role: "user", content: prompt }],
@@ -159,7 +162,7 @@ async function analyzeBatch(
   const prompt = buildPrompt(text, requirements);
 
   const responseText = await cachedCreate({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-opus-4-8",
     max_tokens: 16000,
     system: "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].",
     messages: [{ role: "user", content: prompt }],

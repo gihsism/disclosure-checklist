@@ -62,7 +62,7 @@ IMPORTANT:
 Return ONLY the JSON.`;
 
   const hash = hashRequest({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-opus-4-8",
     system: "You are a senior IFRS auditor. Respond with ONLY valid JSON.",
     messages: [{ role: "user", content: prompt }],
     max_tokens: 6000,
@@ -75,7 +75,8 @@ Return ONLY the JSON.`;
     responseText = cached;
   } else {
     const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-opus-4-8",
+      thinking: { type: "disabled" },
       max_tokens: 6000,
       system: "You are a senior IFRS auditor. Respond with ONLY valid JSON.",
       messages: [{ role: "user", content: prompt }],
