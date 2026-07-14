@@ -192,17 +192,23 @@ export default function AnalysisResults({
   const applicableCount = result.checklist.filter((c) => c.status !== "not_applicable").length;
   const approvalRate = applicableCount > 0 ? Math.round((approvedCount / applicableCount) * 100) : 0;
 
-  // Bulk sign-off: applicable items not yet approved, across the whole report.
+  // Bulk sign-off across the whole report: applicable items split by state.
   const unapprovedApplicableIds = result.checklist
     .filter((c) => c.status !== "not_applicable" && !c.review?.approved)
     .map((c) => c.id);
+  const approvedApplicableIds = result.checklist
+    .filter((c) => c.status !== "not_applicable" && c.review?.approved)
+    .map((c) => c.id);
 
-  // Approve every applicable item in one group (respecting the active filter).
-  const approveGroup = (items: ChecklistItem[]) => {
+  // Approve — or reset — every applicable item in one group (respects filter).
+  const setGroupApproval = (items: ChecklistItem[], approved: boolean) => {
     const ids = items
-      .filter((i) => i.status !== "not_applicable" && !i.review?.approved)
+      .filter(
+        (i) =>
+          i.status !== "not_applicable" && Boolean(i.review?.approved) !== approved
+      )
       .map((i) => i.id);
-    if (ids.length) onBulkApprove?.(ids, true, reviewerName);
+    if (ids.length) onBulkApprove?.(ids, approved, reviewerName);
   };
 
   return (
@@ -277,16 +283,24 @@ export default function AnalysisResults({
             className="text-sm border rounded-md px-2 py-1 bg-white flex-1 min-w-[10rem] max-w-xs"
             placeholder="Enter once — used for all approvals"
           />
-          <button
-            onClick={() => onBulkApprove?.(unapprovedApplicableIds, true, reviewerName)}
-            disabled={unapprovedApplicableIds.length === 0}
-            className="text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-gray-200 disabled:text-gray-400 shrink-0"
-            title="Approve every applicable item that isn't approved yet"
-          >
-            {unapprovedApplicableIds.length === 0
-              ? "All approved"
-              : `Approve all remaining (${unapprovedApplicableIds.length})`}
-          </button>
+          {unapprovedApplicableIds.length > 0 ? (
+            <button
+              onClick={() => onBulkApprove?.(unapprovedApplicableIds, true, reviewerName)}
+              className="text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 shrink-0"
+              title="Approve every applicable item that isn't approved yet"
+            >
+              Approve all remaining ({unapprovedApplicableIds.length})
+            </button>
+          ) : (
+            <button
+              onClick={() => onBulkApprove?.(approvedApplicableIds, false, reviewerName)}
+              disabled={approvedApplicableIds.length === 0}
+              className="text-xs font-medium px-3 py-1.5 rounded-md border shrink-0 bg-white text-gray-600 border-gray-300 hover:bg-gray-50 disabled:text-gray-300 disabled:border-gray-200"
+              title="Clear every approval in the report"
+            >
+              {approvedApplicableIds.length === 0 ? "Nothing to approve" : "Unapprove all"}
+            </button>
+          )}
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
           <div
@@ -426,6 +440,9 @@ export default function AnalysisResults({
           const stdPartial = items.filter(
             (i) => i.status === "partial"
           ).length;
+          const stdApplicable = items.filter(
+            (i) => i.status !== "not_applicable"
+          ).length;
           const stdRemaining = items.filter(
             (i) => i.status !== "not_applicable" && !i.review?.approved
           ).length;
@@ -465,17 +482,26 @@ export default function AnalysisResults({
                     </span>
                   </div>
                 </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    approveGroup(items);
-                  }}
-                  disabled={stdRemaining === 0}
-                  className="text-xs font-medium px-2.5 py-1 mr-3 rounded-md border shrink-0 bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 disabled:bg-gray-50 disabled:text-gray-300 disabled:border-gray-200"
-                  title="Approve all applicable items in this standard"
-                >
-                  {stdRemaining === 0 ? "All approved" : `Approve all (${stdRemaining})`}
-                </button>
+                {stdApplicable > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setGroupApproval(items, stdRemaining > 0);
+                    }}
+                    className={`text-xs font-medium px-2.5 py-1 mr-3 rounded-md border shrink-0 ${
+                      stdRemaining > 0
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                        : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                    }`}
+                    title={
+                      stdRemaining > 0
+                        ? "Approve all applicable items in this standard"
+                        : "Clear all approvals in this standard"
+                    }
+                  >
+                    {stdRemaining > 0 ? `Approve all (${stdRemaining})` : "Unapprove all"}
+                  </button>
+                )}
               </div>
 
               {isExpanded && (
