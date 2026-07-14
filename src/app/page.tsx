@@ -356,6 +356,42 @@ export default function Home() {
     [currentAnalysisId, storage]
   );
 
+  // Approve (or un-approve) many items at once in a single state write + save.
+  const handleBulkApprove = useCallback(
+    (ids: string[], approved: boolean, reviewer: string) => {
+      if (ids.length === 0) return;
+      const idSet = new Set(ids);
+      const reviewedAt = new Date().toISOString();
+      setResult((prev) => {
+        if (!prev) return prev;
+        const newChecklist = prev.checklist.map((item) => {
+          if (!idSet.has(item.id)) return item;
+          return {
+            ...item,
+            review: {
+              approved,
+              reviewer: item.review?.reviewer || reviewer,
+              reviewedAt: approved
+                ? item.review?.approved && item.review.reviewedAt
+                  ? item.review.reviewedAt
+                  : reviewedAt
+                : "",
+              comment: item.review?.comment || "",
+            },
+          };
+        });
+        const next = { ...prev, checklist: newChecklist };
+        if (currentAnalysisId) {
+          storage
+            .update(currentAnalysisId, next)
+            .then(() => setHistoryRefreshKey((k) => k + 1));
+        }
+        return next;
+      });
+    },
+    [currentAnalysisId, storage]
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
@@ -658,6 +694,7 @@ export default function Home() {
                 {result && <AnalysisResults
                   result={result}
                   onUpdateItem={handleUpdateItem}
+                  onBulkApprove={handleBulkApprove}
                   onPageClick={(page, evidence) => {
                     if (page && page !== "N/A") {
                       const p = parseInt(page.split(/[-,]/)[0].trim());

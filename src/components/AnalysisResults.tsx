@@ -17,6 +17,7 @@ import {
 interface AnalysisResultsProps {
   result: AnalysisResult;
   onUpdateItem: (id: string, updates: Partial<ChecklistItem>) => void;
+  onBulkApprove?: (ids: string[], approved: boolean, reviewer: string) => void;
   onPageClick?: (page: string, evidence?: string) => void;
 }
 
@@ -74,6 +75,7 @@ type StatusFilter =
 export default function AnalysisResults({
   result,
   onUpdateItem,
+  onBulkApprove,
   onPageClick,
 }: AnalysisResultsProps) {
   // Start with all standards expanded
@@ -190,6 +192,19 @@ export default function AnalysisResults({
   const applicableCount = result.checklist.filter((c) => c.status !== "not_applicable").length;
   const approvalRate = applicableCount > 0 ? Math.round((approvedCount / applicableCount) * 100) : 0;
 
+  // Bulk sign-off: applicable items not yet approved, across the whole report.
+  const unapprovedApplicableIds = result.checklist
+    .filter((c) => c.status !== "not_applicable" && !c.review?.approved)
+    .map((c) => c.id);
+
+  // Approve every applicable item in one group (respecting the active filter).
+  const approveGroup = (items: ChecklistItem[]) => {
+    const ids = items
+      .filter((i) => i.status !== "not_applicable" && !i.review?.approved)
+      .map((i) => i.id);
+    if (ids.length) onBulkApprove?.(ids, true, reviewerName);
+  };
+
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
@@ -250,7 +265,7 @@ export default function AnalysisResults({
           </span>
         </div>
         {/* Reviewer name — set once, reused on every sign-off */}
-        <div className="flex items-center gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
+        <div className="flex flex-wrap items-center gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
           <label htmlFor="reviewer-name" className="text-xs text-gray-500 shrink-0">
             Your name:
           </label>
@@ -259,9 +274,19 @@ export default function AnalysisResults({
             type="text"
             value={reviewerName}
             onChange={(e) => setReviewerName(e.target.value)}
-            className="text-sm border rounded-md px-2 py-1 bg-white flex-1 max-w-xs"
+            className="text-sm border rounded-md px-2 py-1 bg-white flex-1 min-w-[10rem] max-w-xs"
             placeholder="Enter once — used for all approvals"
           />
+          <button
+            onClick={() => onBulkApprove?.(unapprovedApplicableIds, true, reviewerName)}
+            disabled={unapprovedApplicableIds.length === 0}
+            className="text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-gray-200 disabled:text-gray-400 shrink-0"
+            title="Approve every applicable item that isn't approved yet"
+          >
+            {unapprovedApplicableIds.length === 0
+              ? "All approved"
+              : `Approve all remaining (${unapprovedApplicableIds.length})`}
+          </button>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
           <div
@@ -401,41 +426,57 @@ export default function AnalysisResults({
           const stdPartial = items.filter(
             (i) => i.status === "partial"
           ).length;
+          const stdRemaining = items.filter(
+            (i) => i.status !== "not_applicable" && !i.review?.approved
+          ).length;
 
           return (
             <div
               key={standard}
               className="bg-white rounded-xl border overflow-hidden"
             >
-              <button
-                onClick={() => toggleStandard(standard)}
-                className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors"
-              >
-                {isExpanded ? (
-                  <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />
-                ) : (
-                  <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
-                )}
-                <span className="font-semibold text-gray-900">{standard}</span>
-                <span className="text-sm text-gray-500">
-                  {items[0].standardName}
-                </span>
-                <div className="ml-auto flex items-center gap-2">
-                  {stdMissing > 0 && (
-                    <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                      {stdMissing} missing
-                    </span>
+              <div className="w-full flex items-center">
+                <button
+                  onClick={() => toggleStandard(standard)}
+                  className="flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors flex-1 min-w-0 text-left"
+                >
+                  {isExpanded ? (
+                    <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />
+                  ) : (
+                    <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
                   )}
-                  {stdPartial > 0 && (
-                    <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                      {stdPartial} partial
-                    </span>
-                  )}
-                  <span className="text-xs text-gray-400">
-                    {items.length} items
+                  <span className="font-semibold text-gray-900 shrink-0">{standard}</span>
+                  <span className="text-sm text-gray-500 truncate">
+                    {items[0].standardName}
                   </span>
-                </div>
-              </button>
+                  <div className="ml-auto flex items-center gap-2 shrink-0">
+                    {stdMissing > 0 && (
+                      <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+                        {stdMissing} missing
+                      </span>
+                    )}
+                    {stdPartial > 0 && (
+                      <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                        {stdPartial} partial
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-400">
+                      {items.length} items
+                    </span>
+                  </div>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    approveGroup(items);
+                  }}
+                  disabled={stdRemaining === 0}
+                  className="text-xs font-medium px-2.5 py-1 mr-3 rounded-md border shrink-0 bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 disabled:bg-gray-50 disabled:text-gray-300 disabled:border-gray-200"
+                  title="Approve all applicable items in this standard"
+                >
+                  {stdRemaining === 0 ? "All approved" : `Approve all (${stdRemaining})`}
+                </button>
+              </div>
 
               {isExpanded && (
                 <div className="border-t divide-y">
