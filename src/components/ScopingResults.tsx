@@ -1,6 +1,7 @@
 "use client";
 
 import { ScopingResult, ScopingReview } from "@/types/scoping";
+import { useReviewerName } from "@/lib/useReviewerName";
 import {
   Building2,
   Globe,
@@ -32,6 +33,7 @@ export default function ScopingResults({
   onUpdateReview,
 }: ScopingResultsProps) {
   const review = scoping.review;
+  const [reviewerName, setReviewerName] = useReviewerName();
   const { entity, keyFigures, significantAreas, riskAreas, applicableStandards, notApplicableStandards, summary } = scoping;
 
   return (
@@ -216,16 +218,18 @@ export default function ScopingResults({
             <input
               type="text"
               value={review?.reviewer || ""}
-              onChange={(e) =>
+              onChange={(e) => {
                 onUpdateReview({
                   approved: review?.approved || false,
                   reviewer: e.target.value,
                   reviewedAt: review?.reviewedAt || "",
                   comment: review?.comment || "",
-                })
-              }
+                });
+                // Remember the name so later item sign-offs don't need retyping.
+                setReviewerName(e.target.value);
+              }}
               className="w-full text-sm border rounded-md px-3 py-1.5 bg-white"
-              placeholder="Reviewer name"
+              placeholder={reviewerName ? `Defaults to ${reviewerName}` : "Reviewer name"}
             />
             <textarea
               value={review?.comment || ""}
@@ -247,7 +251,7 @@ export default function ScopingResults({
               const newApproved = !review?.approved;
               onUpdateReview({
                 approved: newApproved,
-                reviewer: review?.reviewer || "",
+                reviewer: review?.reviewer || reviewerName,
                 reviewedAt: newApproved ? new Date().toISOString() : "",
                 comment: review?.comment || "",
               });

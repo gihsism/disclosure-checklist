@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChecklistItem, AnalysisResult } from "@/types";
+import { useReviewerName } from "@/lib/useReviewerName";
 import {
   CheckCircle,
   XCircle,
@@ -91,6 +92,7 @@ export default function AnalysisResults({
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [showApplicability, setShowApplicability] = useState(false);
+  const [reviewerName, setReviewerName] = useReviewerName();
 
   // Group by standard
   const grouped = result.checklist.reduce(
@@ -246,6 +248,20 @@ export default function AnalysisResults({
           <span className="text-sm font-bold text-gray-900">
             {approvedCount} / {applicableCount} ({approvalRate}%)
           </span>
+        </div>
+        {/* Reviewer name — set once, reused on every sign-off */}
+        <div className="flex items-center gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
+          <label htmlFor="reviewer-name" className="text-xs text-gray-500 shrink-0">
+            Your name:
+          </label>
+          <input
+            id="reviewer-name"
+            type="text"
+            value={reviewerName}
+            onChange={(e) => setReviewerName(e.target.value)}
+            className="text-sm border rounded-md px-2 py-1 bg-white flex-1 max-w-xs"
+            placeholder="Enter once — used for all approvals"
+          />
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
           <div
@@ -559,7 +575,7 @@ export default function AnalysisResults({
                                         })
                                       }
                                       className="text-sm border rounded-md px-2 py-1 bg-white flex-1"
-                                      placeholder="Reviewer name"
+                                      placeholder={reviewerName ? `Defaults to ${reviewerName}` : "Reviewer name"}
                                     />
                                   </div>
                                   <textarea
@@ -585,7 +601,7 @@ export default function AnalysisResults({
                                     onUpdateItem(item.id, {
                                       review: {
                                         approved: newApproved,
-                                        reviewer: item.review?.reviewer || "",
+                                        reviewer: item.review?.reviewer || reviewerName,
                                         reviewedAt: newApproved ? new Date().toISOString() : "",
                                         comment: item.review?.comment || "",
                                       },

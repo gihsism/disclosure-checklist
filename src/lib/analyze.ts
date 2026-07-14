@@ -121,15 +121,7 @@ Be INCLUSIVE — if unsure, mark as applicable. Only mark not applicable when yo
 }
 
 // ─── Pass 2: Detailed analysis ──────────────────────────────────
-function buildPrompt(text: string, requirements: DisclosureRequirement[]): string {
-  const requirementsList = requirements
-    .map(
-      (r) =>
-        `[${r.id}] ${r.standard} ${r.paragraph}: ${r.description} (${r.importance})`
-    )
-    .join("\n");
-
-  return `You are a senior IFRS audit expert. Analyze the financial statements against each disclosure requirement below.
+const ANALYSIS_INSTRUCTIONS = `You are a senior IFRS audit expert. Analyze the financial statements against each disclosure requirement provided.
 
 The text has [PAGE X] markers at the start of each page.
 
@@ -143,30 +135,72 @@ For each requirement:
 - "status": "present" | "partial" | "missing" | "not_applicable"
 - "pages": page number(s) from [PAGE X] markers (e.g. "42", "15, 67"). "N/A" if missing/not applicable.
 - "notes": brief explanation (where found if present, what's missing if partial/missing)
-- "evidence": quoted text (empty string if missing)
+- "evidence": quoted text (empty string if missing)`;
 
-=== FINANCIAL STATEMENT TEXT ===
-${text}
+function buildRequirementsBlock(requirements: DisclosureRequirement[]): string {
+  const requirementsList = requirements
+    .map(
+      (r) =>
+        `[${r.id}] ${r.standard} ${r.paragraph}: ${r.description} (${r.importance})`
+    )
+    .join("\n");
 
-=== REQUIREMENTS ===
+  return `=== REQUIREMENTS ===
 ${requirementsList}
 
 Return ONLY a JSON array:
 [{"id":"...","status":"...","pages":"...","notes":"...","evidence":"..."}]`;
 }
 
+function batchDefaults(requirements: DisclosureRequirement[]): AnalysisItem[] {
+  return requirements.map((r) => ({
+    id: r.id,
+    status: "unchecked",
+    pages: "N/A",
+    notes: "Analysis could not be completed for this item — please review manually.",
+    evidence: "",
+  }));
+}
+
 async function analyzeBatch(
   text: string,
   requirements: DisclosureRequirement[]
 ): Promise<AnalysisItem[]> {
-  const prompt = buildPrompt(text, requirements);
+  // The full document is identical across every batch of this analysis. It is
+  // sent as a cache_control'd content block so the first batch writes it to the
+  // prompt cache and the remaining batches read it back at ~10% of the input
+  // cost, instead of re-sending ~45K tokens of statements per batch.
+  const documentContext = `${ANALYSIS_INSTRUCTIONS}
 
-  const responseText = await cachedCreate({
-    model: "claude-opus-4-8",
-    max_tokens: 16000,
-    system: "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].",
-    messages: [{ role: "user", content: prompt }],
-  });
+=== FINANCIAL STATEMENT TEXT ===
+${text}`;
+
+  let responseText: string;
+  try {
+    responseText = await cachedCreate({
+      model: "claude-opus-4-8",
+      max_tokens: 16000,
+      system: "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].",
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: documentContext,
+              cache_control: { type: "ephemeral" },
+            },
+            { type: "text", text: buildRequirementsBlock(requirements) },
+          ],
+        },
+      ],
+    });
+  } catch (err) {
+    // A transient API failure on one batch must not sink the entire report —
+    // mark just this batch's items for manual review and let the rest proceed.
+    console.error("Batch analysis request failed, flagging items for manual review:", err);
+    return batchDefaults(requirements);
+  }
 
   let jsonText = responseText.trim();
   // Strip markdown code blocks
@@ -183,13 +217,7 @@ async function analyzeBatch(
   } catch {
     // If still can't parse, return defaults for all requirements
     console.error("Failed to parse AI response, returning defaults. Response start:", jsonText.substring(0, 200));
-    return requirements.map((r) => ({
-      id: r.id,
-      status: "unchecked",
-      pages: "N/A",
-      notes: "Analysis could not be completed for this item — please review manually.",
-      evidence: "",
-    }));
+    return batchDefaults(requirements);
   }
 }
 
@@ -237,13 +265,21 @@ export async function analyzeFinancialStatements(
   }
 
   const allResults: AnalysisItem[] = [];
-  for (let i = 0; i < batches.length; i += MAX_PARALLEL) {
-    const chunk = batches.slice(i, i + MAX_PARALLEL);
-    const batchResults = await Promise.all(
-      chunk.map((batch) => analyzeBatch(truncatedText, batch))
-    );
-    for (const results of batchResults) {
-      allResults.push(...results);
+  if (batches.length > 0) {
+    // Run the first batch alone so it warms the document prompt cache, then fan
+    // the rest out in parallel — they read the cached document rather than
+    // re-sending it, which is where the cost saving actually lands.
+    const [firstBatch, ...remainingBatches] = batches;
+    allResults.push(...(await analyzeBatch(truncatedText, firstBatch)));
+
+    for (let i = 0; i < remainingBatches.length; i += MAX_PARALLEL) {
+      const chunk = remainingBatches.slice(i, i + MAX_PARALLEL);
+      const batchResults = await Promise.all(
+        chunk.map((batch) => analyzeBatch(truncatedText, batch))
+      );
+      for (const results of batchResults) {
+        allResults.push(...results);
+      }
     }
   }
 
