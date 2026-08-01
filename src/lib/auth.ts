@@ -1,15 +1,16 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import PostgresAdapter from "@auth/pg-adapter";
-import { pool } from "./db";
 
+// Lightweight sign-in: identity only, via a signed JWT cookie — no database.
+// Requires AUTH_SECRET, AUTH_GOOGLE_ID, AUTH_GOOGLE_SECRET in the environment.
+// trustHost lets it work behind Vercel's proxy / a custom domain.
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PostgresAdapter(pool),
   providers: [Google],
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
+  trustHost: true,
   callbacks: {
-    session({ session, user }) {
-      if (session.user) session.user.id = String(user.id);
+    session({ session, token }) {
+      if (session.user && token.sub) session.user.id = token.sub;
       return session;
     },
   },

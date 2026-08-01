@@ -1,6 +1,7 @@
 /**
- * Unified storage: dispatches to IndexedDB (anonymous) or the server API
- * (authenticated) based on session presence.
+ * History storage. Analyses are kept locally in the browser (IndexedDB)
+ * regardless of sign-in, so signing in never hides or loses previously saved
+ * analyses. Sign-in is identity-only; it does not move history to a server.
  */
 
 import type { AnalysisResult } from "@/types";
@@ -14,13 +15,6 @@ import {
   AnalysisRecord,
   AnalysisSummary,
 } from "./analysis-store";
-import {
-  saveAnalysisRemote,
-  listAnalysesRemote,
-  loadAnalysisRemote,
-  updateAnalysisResultRemote,
-  deleteAnalysisRemote,
-} from "./remote-store";
 
 export interface Storage {
   save(entry: { fileName: string; result: AnalysisResult; file?: File }): Promise<string>;
@@ -31,7 +25,7 @@ export interface Storage {
   clear(): Promise<void>;
 }
 
-const localStorage: Storage = {
+const localStorageBackend: Storage = {
   save: (e) => saveLocal(e),
   list: () => listLocal(),
   load: (id) => loadLocal(id),
@@ -40,18 +34,8 @@ const localStorage: Storage = {
   clear: () => clearLocal(),
 };
 
-const remoteStorage: Storage = {
-  save: (e) => saveAnalysisRemote(e),
-  list: () => listAnalysesRemote(),
-  load: (id) => loadAnalysisRemote(id),
-  update: (id, r) => updateAnalysisResultRemote(id, r),
-  delete: (id) => deleteAnalysisRemote(id),
-  clear: async () => {
-    const entries = await listAnalysesRemote();
-    await Promise.all(entries.map((e) => deleteAnalysisRemote(e.id)));
-  },
-};
-
-export function getStorage(isAuthenticated: boolean): Storage {
-  return isAuthenticated ? remoteStorage : localStorage;
+// Kept for API compatibility with callers; history is always local now.
+export function getStorage(_isAuthenticated: boolean): Storage {
+  void _isAuthenticated;
+  return localStorageBackend;
 }
