@@ -162,32 +162,67 @@ function batchDefaults(requirements: DisclosureRequirement[]): AnalysisItem[] {
   }));
 }
 
-async function analyzeBatch(
-  text: string,
-  requirements: DisclosureRequirement[]
-): Promise<AnalysisItem[]> {
-  // The full document is identical across every batch of this analysis. It is
-  // sent as a cache_control'd content block so the first batch writes it to the
-  // prompt cache and the remaining batches read it back at ~10% of the input
-  // cost, instead of re-sending ~45K tokens of statements per batch.
-  const documentContext = `${ANALYSIS_INSTRUCTIONS}
+const BATCH_SYSTEM =
+  "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].";
+
+// The instructions + full document are identical across every batch, so this
+// block carries cache_control: it is written to the prompt cache once and read
+// back by the other batches at ~10% of the input cost. Must be byte-identical
+// between prewarm and every batch for the cache to hit.
+function buildDocumentContext(text: string): string {
+  return `${ANALYSIS_INSTRUCTIONS}
 
 === FINANCIAL STATEMENT TEXT ===
 ${text}`;
+}
 
-  let responseText: string;
+// Write the shared document to the prompt cache with a tiny throwaway request
+// (~2-3s) so all batches can then run in parallel and read it, instead of
+// serialising a full batch just to warm the cache. Best-effort: on failure the
+// batches simply each pay the first-write cost as before.
+async function prewarmDocumentCache(text: string): Promise<void> {
   try {
-    responseText = await cachedCreate({
+    await client.messages.create({
       model: "claude-opus-4-8",
-      max_tokens: 16000,
-      system: "You are an IFRS disclosure compliance analyzer. You MUST respond with ONLY a valid JSON array. No explanations, no markdown, no prose — just the JSON array starting with [ and ending with ].",
+      max_tokens: 4,
+      thinking: { type: "disabled" },
+      system: BATCH_SYSTEM,
       messages: [
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: documentContext,
+              text: buildDocumentContext(text),
+              cache_control: { type: "ephemeral" },
+            },
+            { type: "text", text: "Reply with []." },
+          ],
+        },
+      ],
+    });
+  } catch (err) {
+    console.error("Document cache prewarm failed (continuing without it):", err);
+  }
+}
+
+async function analyzeBatch(
+  text: string,
+  requirements: DisclosureRequirement[]
+): Promise<AnalysisItem[]> {
+  let responseText: string;
+  try {
+    responseText = await cachedCreate({
+      model: "claude-opus-4-8",
+      max_tokens: 16000,
+      system: BATCH_SYSTEM,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: buildDocumentContext(text),
               cache_control: { type: "ephemeral" },
             },
             { type: "text", text: buildRequirementsBlock(requirements) },
@@ -266,14 +301,16 @@ export async function analyzeFinancialStatements(
 
   const allResults: AnalysisItem[] = [];
   if (batches.length > 0) {
-    // Run the first batch alone so it warms the document prompt cache, then fan
-    // the rest out in parallel — they read the cached document rather than
-    // re-sending it, which is where the cost saving actually lands.
-    const [firstBatch, ...remainingBatches] = batches;
-    allResults.push(...(await analyzeBatch(truncatedText, firstBatch)));
+    // Warm the shared-document cache with a tiny request first (only worth it
+    // when several batches will read it back), then run all batches in parallel
+    // — they read the cached document instead of re-sending ~45K tokens each,
+    // without serialising a full batch just to prime the cache.
+    if (batches.length > 1) {
+      await prewarmDocumentCache(truncatedText);
+    }
 
-    for (let i = 0; i < remainingBatches.length; i += MAX_PARALLEL) {
-      const chunk = remainingBatches.slice(i, i + MAX_PARALLEL);
+    for (let i = 0; i < batches.length; i += MAX_PARALLEL) {
+      const chunk = batches.slice(i, i + MAX_PARALLEL);
       const batchResults = await Promise.all(
         chunk.map((batch) => analyzeBatch(truncatedText, batch))
       );
