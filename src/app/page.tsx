@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import FileUpload from "@/components/FileUpload";
 import AnalysisResults from "@/components/AnalysisResults";
 import { AnalysisResult, ChecklistItem } from "@/types";
@@ -22,6 +22,11 @@ import { useSession } from "next-auth/react";
 import AuthButton from "@/components/AuthButton";
 
 type AppStep = "upload" | "scoping" | "results";
+
+// Pointer to the analysis the user last had open, so we can reopen it after
+// the page is closed. The analysis itself (results, approvals, notes, PDF)
+// already lives in IndexedDB; this just records which one to restore.
+const LAST_ANALYSIS_KEY = "disclosure.lastAnalysisId";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -119,6 +124,37 @@ export default function Home() {
       setShowPdf(true);
     }
   };
+
+  // On first load, reopen the analysis the user last had open (if it still
+  // exists) so they resume exactly where they left off after closing the page.
+  useEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem(LAST_ANALYSIS_KEY);
+    } catch {
+      saved = null;
+    }
+    if (!saved) return;
+    loadAnalysisById(saved).catch(() => {
+      try {
+        localStorage.removeItem(LAST_ANALYSIS_KEY);
+      } catch {
+        /* ignore */
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Remember which analysis is open (written on save and on every approval,
+  // since currentAnalysisId is stable while an analysis is being reviewed).
+  useEffect(() => {
+    if (!currentAnalysisId) return;
+    try {
+      localStorage.setItem(LAST_ANALYSIS_KEY, currentAnalysisId);
+    } catch {
+      /* ignore */
+    }
+  }, [currentAnalysisId]);
 
   const handlePdfAttach = (f: File) => {
     setFile(f);
@@ -612,6 +648,12 @@ export default function Home() {
                   setResult(null);
                   setFile(null);
                   setScopingResult(null);
+                  setCurrentAnalysisId(null);
+                  try {
+                    localStorage.removeItem(LAST_ANALYSIS_KEY);
+                  } catch {
+                    /* ignore */
+                  }
                   setStep("upload");
                 }}
                 className="text-sm text-blue-600 hover:text-blue-800 font-medium"
